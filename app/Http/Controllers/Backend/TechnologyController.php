@@ -46,24 +46,24 @@ class TechnologyController extends Controller
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.required' => 'Загрузите изображение',
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.required' => 'Загрузите изображение',
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
 
         $requestData = $request->all();
 
         if ($request->hasFile('image')) {
 
-            $name = time().'.'.$requestData['image']->extension();
+            $name = time() . '.' . $requestData['image']->extension();
             $path = 'technology';
             $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
         }
 
         if ($request->hasFile('video')) {
 
-            $name = time().'.'.$requestData['video']->extension();
+            $name = time() . '.' . $requestData['video']->extension();
             $path = 'technology';
             $requestData['video'] = $request->file('video')->storeAs($path, $name, 'static');
         }
@@ -99,7 +99,7 @@ class TechnologyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -113,7 +113,7 @@ class TechnologyController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -128,7 +128,7 @@ class TechnologyController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -137,27 +137,27 @@ class TechnologyController extends Controller
         $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
         $requestData = $request->all();
         $technology = Technology::findOrFail($id);
         if ($request->hasFile('image')) {
-            if($technology->image != null){
+            if ($technology->image != null) {
                 Storage::disk('static')->delete($technology->image);
             }
-            $name = time().'.'.$requestData['image']->extension();
+            $name = time() . '.' . $requestData['image']->extension();
             $path = 'technology';
             $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
             $technology->image = $requestData['image'];
         }
 
         if ($request->hasFile('video')) {
-            if($technology->video != null){
+            if ($technology->video != null) {
                 Storage::disk('static')->delete($technology->video);
             }
-            $name = time().'.'.$requestData['video']->extension();
+            $name = time() . '.' . $requestData['video']->extension();
             $path = 'technology';
             $requestData['video'] = $request->file('video')->storeAs($path, $name, 'static');
 
@@ -189,17 +189,17 @@ class TechnologyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id)
     {
         $technology = Technology::find($id);
-        if($technology->image != null){
+        if ($technology->image != null) {
             Storage::disk('static')->delete($technology->image);
         }
-        if($technology->video != null){
+        if ($technology->video != null) {
             Storage::disk('static')->delete($technology->video);
         }
         $title = Translate::find($technology->title);

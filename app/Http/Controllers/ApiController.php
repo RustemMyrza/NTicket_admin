@@ -109,6 +109,7 @@ class ApiController extends Controller
         }
 
         $data['analytics'] = AnalyticsBlock::latest()->get();
+
         return response()->json($data);
     }
 
@@ -179,6 +180,21 @@ class ApiController extends Controller
 
         return response()->json([
             'data'  =>  $news,
+        ]);
+    }
+
+    public function technologies(Request $request)
+    {
+        $request->validate([
+            'lang'  =>  'required',
+        ]);
+        $lang = $request->lang;
+        $technologies = Technology::join('translates as title', 'title.id', 'technology.title')->join('translates as content', 'content.id', 'technology.content')
+            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'technology.video','technology.created_at')
+            ->get();
+
+        return response()->json([
+            'data'  =>  $technologies,
         ]);
     }
 }
