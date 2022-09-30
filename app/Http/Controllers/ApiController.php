@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\NewsResource;
 use App\Http\Resources\PartnerBlockResource;
+use App\Http\Resources\PartnerResource;
+use App\Http\Resources\ServiceResource;
+use App\Http\Resources\TechnologyResource;
 use App\Models\Banner;
 use App\Models\AnalyticsBlock;
 use App\Models\AboutBlock;
@@ -174,12 +178,10 @@ class ApiController extends Controller
             'lang'  =>  'required',
         ]);
         $lang = $request->lang;
-        $news = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
-            ->select('news.id', 'news.image', 'news.viewing', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.created_at')
-            ->get();
+        $news = News::get();
 
         return response()->json([
-            'data'  =>  $news,
+            'data'  =>  NewsResource::collection($news),
         ]);
     }
 
@@ -195,6 +197,62 @@ class ApiController extends Controller
 
         return response()->json([
             'data'  =>  $technologies,
+        ]);
+    }
+
+    public function newsById(Request $request)
+    {
+        $request->validate([
+            'lang'  =>  'required',
+            'news_id'   =>  'required|exists:news,id',
+        ]);
+        $lang = $request->lang;
+        $news = News::find($request['news_id']);
+
+        return response()->json([
+            'data'  =>  new NewsResource($news),
+        ]);
+    }
+
+    public function technologyById(Request $request)
+    {
+        $request->validate([
+            'lang'  =>  'required',
+            'technology_id'   =>  'required|exists:technology,id',
+        ]);
+        $lang = $request->lang;
+        $tech = Technology::find($request['technology_id']);
+
+        return response()->json([
+            'data'  =>  new TechnologyResource($tech),
+        ]);
+    }
+
+    public function partnerById(Request $request)
+    {
+        $request->validate([
+            'lang'  =>  'required',
+            'partner_id'   =>  'required|exists:partner,id',
+        ]);
+        $lang = $request->lang;
+        $tech = Partner::find($request['partner_id']);
+
+        return response()->json([
+            'data'  =>  new PartnerResource($tech),
+        ]);
+    }
+
+    public function serviceById(Request $request)
+    {
+        $request->validate([
+            'lang'  =>  'required',
+            'service_id'   =>  'required|exists:services,id',
+        ]);
+        $lang = $request->lang;
+        $tech = Service::find($request['service_id']);
+
+        return response()->json([
+            'data'  =>  new ServiceResource($tech),
         ]);
     }
 }

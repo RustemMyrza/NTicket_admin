@@ -29,3 +29,8 @@ Route::post('/feedback', [App\Http\Controllers\ApiController::class, 'feedback']
 Route::get('/partners', [\App\Http\Controllers\ApiController::class, 'partners']);
 Route::get('/news', [\App\Http\Controllers\ApiController::class, 'news']);
 Route::get('/technologies', [\App\Http\Controllers\ApiController::class, 'technologies']);
+
+Route::get('/news-by-id', [\App\Http\Controllers\ApiController::class, 'newsById']);
+Route::get('/partners-by-id', [\App\Http\Controllers\ApiController::class, 'partnerById']);
+Route::get('/technology-by-id', [\App\Http\Controllers\ApiController::class, 'technologyById']);
+Route::get('/service-by-id', [\App\Http\Controllers\ApiController::class, 'serviceById']);
