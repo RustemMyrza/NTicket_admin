@@ -31,23 +31,27 @@
             </ul>
         @endif
 
-        <form method="POST" action="{{ url('/admin/pages') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+        <form method="POST" action="{{ url('/admin/pages') }}" accept-charset="UTF-8" class="form-horizontal"
+              enctype="multipart/form-data">
             {{ csrf_field() }}
 
             <div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
                 <label for="title" class="control-label">{{ 'Title' }}</label>
-                <input class="form-control" name="title" type="text" id="title" value="{{ isset($page->title) ? $page->title : ''}}" >
+                <input class="form-control" name="title" type="text" id="title"
+                       value="{{ isset($page->title) ? $page->title : ''}}">
                 {!! $errors->first('title', '<p class="help-block">:message</p>') !!}
             </div>
             <input type="text" hidden value="{{ isset($slug) ? $slug : ''}}" name="slug">
             <div class="form-group {{ $errors->has('meta_title') ? 'has-error' : ''}}">
                 <label for="meta_title" class="control-label">{{ 'Meta Title' }}</label>
-                <input class="form-control" name="meta_title" type="text" id="meta_title" value="{{ isset($page->meta_title) ? $page->meta_title : ''}}" >
+                <input class="form-control" name="meta_title" type="text" id="meta_title"
+                       value="{{ isset($page->meta_title) ? $page->meta_title : ''}}">
                 {!! $errors->first('meta_title', '<p class="help-block">:message</p>') !!}
             </div>
             <div class="form-group {{ $errors->has('meta_description') ? 'has-error' : ''}}">
                 <label for="meta_description" class="control-label">{{ 'Meta Description' }}</label>
-                <textarea class="form-control" rows="5" name="meta_description" type="textarea" id="meta_description" >{{ isset($page->meta_description) ? $page->meta_description : ''}}</textarea>
+                <textarea class="form-control" rows="5" name="meta_description" type="textarea"
+                          id="meta_description">{{ isset($page->meta_description) ? $page->meta_description : ''}}</textarea>
                 {!! $errors->first('meta_description', '<p class="help-block">:message</p>') !!}
             </div>
 
@@ -57,8 +61,8 @@
 
 
         </form>
-@endsection
+        @endsection
 
-@section('js')
-    <script> console.log('pages!'); </script>
+        @section('js')
+            <script> console.log('pages!'); </script>
 @stop

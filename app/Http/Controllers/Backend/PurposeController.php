@@ -52,21 +52,21 @@ class PurposeController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $request->validate([
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'logo.required' => 'Загрузите изображение',
-            'logo.mimes' => 'Проверьте формат изображения',
-            'logo.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'logo.required' => 'Загрузите изображение',
+                'logo.mimes' => 'Проверьте формат изображения',
+                'logo.max' => 'Размер файла не может превышать 2МБ'
+            ]);
 
         $requestData = $request->all();
 
         if ($request->hasFile('logo')) {
 
-            $name = time().'.'.$requestData['logo']->extension();
+            $name = time() . '.' . $requestData['logo']->extension();
             $path = 'logo';
             $requestData['logo'] = $request->file('logo')->storeAs($path, $name, 'static');
         }
@@ -86,14 +86,13 @@ class PurposeController extends Controller
         $purpose->save();
 
 
-
         return redirect('admin/purpose')->with('flash_message', 'Purpose added!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -107,7 +106,7 @@ class PurposeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -122,27 +121,27 @@ class PurposeController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(Request $request, $id)
     {
-        
+
         $request->validate([
             'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'logo.mimes' => 'Проверьте формат изображения',
-            'logo.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'logo.mimes' => 'Проверьте формат изображения',
+                'logo.max' => 'Размер файла не может превышать 2МБ'
+            ]);
         $requestData = $request->all();
         $purpose = Purpose::findOrFail($id);
         if ($request->hasFile('logo')) {
-            if($purpose->logo != null){
+            if ($purpose->logo != null) {
                 Storage::disk('static')->delete($purpose->logo);
             }
-            $name = time().'.'.$requestData['logo']->extension();
+            $name = time() . '.' . $requestData['logo']->extension();
             $path = 'purpose';
             $requestData['logo'] = $request->file('logo')->storeAs($path, $name, 'static');
             $purpose->logo = $requestData['logo'];
@@ -165,14 +164,14 @@ class PurposeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id)
     {
         $purpose = Purpose::find($id);
-        if($purpose->logo != null){
+        if ($purpose->logo != null) {
             Storage::disk('static')->delete($purpose->logo);
         }
         $title = Translate::find($purpose->title);

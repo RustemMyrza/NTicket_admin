@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PartnerBlockResource;
 use App\Models\Banner;
 use App\Models\AnalyticsBlock;
 use App\Models\AboutBlock;
@@ -10,10 +11,15 @@ use App\Models\Block;
 use App\Models\Contacts;
 use App\Models\Feedback;
 use App\Models\MarketAnalysi;
+use App\Models\News;
 use App\Models\Page;
+use App\Models\Partner;
+use App\Models\PartnerBlock;
+use App\Models\Purpose;
 use App\Models\Question;
 use App\Models\Service;
 use App\Models\Slider;
+use App\Models\Technology;
 use App\Models\WorkPrinciple;
 use Illuminate\Http\Request;
 
@@ -22,7 +28,7 @@ class ApiController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\JsonResponse
      */
     public function homePage()
     {
@@ -32,6 +38,20 @@ class ApiController extends Controller
             ->join('translates as content', 'content.id', 'banner.content')
             ->select('banner.id', 'banner.created_at', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'banner.image')
             ->get();
+
+        $data['purposes'] = Purpose::join('translates as title', 'title.id', 'purposes.title')
+            ->select('purposes.id', 'purposes.logo', 'title.'.$lang.' as title')
+            ->get();
+
+        $data['news'] = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
+            ->select('news.id', 'news.image', 'news.viewing', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.created_at')
+            ->get();
+
+        $data['technologies'] = Technology::join('translates as title', 'title.id', 'technology.title')->join('translates as content', 'content.id', 'technology.content')
+            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'technology.created_at', 'technology.video')
+            ->get();
+
+        $data['partners'] = Partner::pluck('image');
 
         return response()->json($data);
     }
@@ -58,7 +78,7 @@ class ApiController extends Controller
             $data['general']['meta_title'] = $page_general->meta_title;
             $data['general']['meta_description'] = $page_general->meta_description;
         }
-        $data['about_blocks'] = AboutBlock::join('translates as content', 'content.id', 'about_blocks.content')->select('about_blocks.id', 'about_blocks.image', 'content.'.$request->lang.' as content','about_blocks.created_at')->latest()->get();
+        $data['about_blocks'] = AboutBlock::join('translates as content', 'content.id', 'about_blocks.content')->select('about_blocks.id', 'about_blocks.image', 'content.' . $request->lang . ' as content', 'about_blocks.created_at')->latest()->get();
         $data['work_principles_title'] = Block::where('block_type', 'work_principles')->first();
         $data['work_principles_blocks'] = WorkPrinciple::latest()->get();
         $data['market_analysis'] = MarketAnalysi::latest()->get();
@@ -135,4 +155,15 @@ class ApiController extends Controller
         }
     }
 
+    public function partners(Request $request)
+    {
+        $request->validate([
+            'lang'  =>  'required',
+        ]);
+        $partners = PartnerBlock::get();
+
+        return response()->json([
+            'data'  =>  PartnerBlockResource::collection($partners),
+        ]);
+    }
 }

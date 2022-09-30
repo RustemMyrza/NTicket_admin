@@ -15,10 +15,10 @@ class Contacts extends Model
     protected $table = 'contacts';
 
     /**
-    * The database primary key value.
-    *
-    * @var string
-    */
+     * The database primary key value.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
 
     /**
@@ -26,5 +26,5 @@ class Contacts extends Model
      *
      * @var array
      */
-    protected $fillable = ['phone_number', 'email', 'address', 'address2', 'description', 'whats_app', 'telegram', 'facebook','insta'];
+    protected $fillable = ['phone_number', 'email', 'address', 'address2', 'description', 'whats_app', 'telegram', 'facebook', 'insta', 'link'];
 }
