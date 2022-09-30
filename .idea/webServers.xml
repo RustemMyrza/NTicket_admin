@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="b09a1867-531f-4bf6-b13d-a61c966da661" name="napmk">
+        <fileTransfer rootFolder="/var/www/www-root/data/www/napmk/backend" accessType="SFTP" host="185.22.65.112" port="22" sshConfigId="ce835da0-8906-4490-b6db-8c108bbadf7a" sshConfig="root@185.22.65.112:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -166,4 +166,19 @@ class ApiController extends Controller
             'data'  =>  PartnerBlockResource::collection($partners),
         ]);
     }
+
+    public function news(Request $request)
+    {
+        $request->validate([
+            'lang'  =>  'required',
+        ]);
+        $lang = $request->lang;
+        $news = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
+            ->select('news.id', 'news.image', 'news.viewing', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.created_at')
+            ->get();
+
+        return response()->json([
+            'data'  =>  $news,
+        ]);
+    }
 }
