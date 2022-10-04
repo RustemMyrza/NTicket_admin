@@ -204,10 +204,10 @@ class ApiController extends Controller
     {
         $request->validate([
             'lang'  =>  'required',
-            'news_id'   =>  'required|exists:news,id',
+            'id'   =>  'required|exists:news,id',
         ]);
         $lang = $request->lang;
-        $news = News::find($request['news_id']);
+        $news = News::find($request['id']);
 
         return response()->json([
             'data'  =>  new NewsResource($news),
@@ -218,10 +218,10 @@ class ApiController extends Controller
     {
         $request->validate([
             'lang'  =>  'required',
-            'technology_id'   =>  'required|exists:technology,id',
+            'id'   =>  'required|exists:technology,id',
         ]);
         $lang = $request->lang;
-        $tech = Technology::find($request['technology_id']);
+        $tech = Technology::find($request['id']);
 
         return response()->json([
             'data'  =>  new TechnologyResource($tech),
@@ -232,10 +232,10 @@ class ApiController extends Controller
     {
         $request->validate([
             'lang'  =>  'required',
-            'partner_id'   =>  'required|exists:partner,id',
+            'id'   =>  'required|exists:partner,id',
         ]);
         $lang = $request->lang;
-        $tech = Partner::find($request['partner_id']);
+        $tech = Partner::find($request['id']);
 
         return response()->json([
             'data'  =>  new PartnerResource($tech),
@@ -246,10 +246,10 @@ class ApiController extends Controller
     {
         $request->validate([
             'lang'  =>  'required',
-            'service_id'   =>  'required|exists:services,id',
+            'id'   =>  'required|exists:services,id',
         ]);
         $lang = $request->lang;
-        $tech = Service::find($request['service_id']);
+        $tech = Service::find($request['id']);
 
         return response()->json([
             'data'  =>  new ServiceResource($tech),

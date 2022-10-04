@@ -29,13 +29,13 @@
     <div class="tab-pane fade" id="custom-tabs-one-ru" role="tabpanel" aria-labelledby="custom-tabs-one-ru-tab">
         <div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
             <label for="title_ru" class="control-label">{{ 'Наименование RU' }}</label>
-            <textarea class="ckeditor form-control" name="title[ru]" type="text"
+            <textarea class="form-control" name="title[ru]" type="text"
                       id="title_ru">{{ isset($news->getTitle->ru) ? $news->getTitle->ru : old('title.ru')}}</textarea>
             {!! $errors->first('title[ru]', '<p class="help-block">:message</p>') !!}
         </div>
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <label for="content_ru" class="control-label">{{ 'Описание RU' }}</label>
-            <textarea class="form-control" name="content[ru]" type="text" id="content_ru">
+            <textarea class="my-editor form-control" name="content[ru]" id="content_ru">
                 {{ isset($news->getContent->ru) ? $news->getContent->ru : old('content.ru')}}
             </textarea>
             {!! $errors->first('content[ru]"', '<p class="help-block">:message</p>') !!}
@@ -51,7 +51,7 @@
         </div>
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <label for="content_ru" class="control-label">{{ 'Описание EN' }}</label>
-            <textarea class="form-control" name="content[en]" type="text" id="content_ru">
+            <textarea class="form-control" name="content[en]" id="content_en">
                 {{ isset($news->getContent->en) ? $news->getContent->en : old('content.en')}}
             </textarea>
             {!! $errors->first('content[ru]"', '<p class="help-block">:message</p>') !!}
@@ -115,7 +115,7 @@
         </div>
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <label for="content_phr" class="control-label">{{ 'Описание PRS' }}</label>
-            <textarea class="form-control" name="content[phr]" type="text" id="content_phr">
+            <textarea class="ckeditor form-control" name="content[phr]" type="text" id="content_phr">
                 {{ isset($news->getContent->phr) ? $news->getContent->phr : old('content.phr')}}
             </textarea>
             {!! $errors->first('content[phr]"', '<p class="help-block">:message</p>') !!}
