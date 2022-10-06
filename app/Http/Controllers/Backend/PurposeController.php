@@ -65,10 +65,8 @@ class PurposeController extends Controller
         $requestData = $request->all();
 
         if ($request->hasFile('logo')) {
-
-            $name = time() . '.' . $requestData['logo']->extension();
-            $path = 'logo';
-            $requestData['logo'] = $request->file('logo')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('logo'));
+            $requestData['logo'] = $path;
         }
 
         $title = new Translate();
@@ -141,9 +139,9 @@ class PurposeController extends Controller
             if ($purpose->logo != null) {
                 Storage::disk('static')->delete($purpose->logo);
             }
-            $name = time() . '.' . $requestData['logo']->extension();
-            $path = 'purpose';
-            $requestData['logo'] = $request->file('logo')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('logo'));
+
+            $requestData['logo'] = $path;
             $purpose->logo = $requestData['logo'];
         }
 

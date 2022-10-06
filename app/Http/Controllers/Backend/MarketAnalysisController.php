@@ -49,7 +49,6 @@ class MarketAnalysisController extends Controller
      */
     public function store(Request $request)
     {
-
         $requestData = $request->all();
 
         MarketAnalysi::create($requestData);
@@ -60,7 +59,7 @@ class MarketAnalysisController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -74,7 +73,7 @@ class MarketAnalysisController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -89,13 +88,12 @@ class MarketAnalysisController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(Request $request, $id)
     {
-
         $requestData = $request->all();
 
         $marketanalysi = MarketAnalysi::findOrFail($id);
@@ -107,7 +105,7 @@ class MarketAnalysisController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */

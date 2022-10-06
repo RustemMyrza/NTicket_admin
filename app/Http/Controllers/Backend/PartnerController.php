@@ -20,7 +20,7 @@ class PartnerController extends Controller
     {
         $requestData = $request->all();
         $perPage = 25;
-        $partner = Partner::where('block_id',$requestData['block_id'])->latest()->paginate($perPage);
+        $partner = Partner::where('block_id', $requestData['block_id'])->latest()->paginate($perPage);
 
         return view('partner.index', compact('partner'));
     }
@@ -47,19 +47,18 @@ class PartnerController extends Controller
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.required' => 'Загрузите изображение',
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.required' => 'Загрузите изображение',
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
 
         $requestData = $request->all();
 
         if ($request->hasFile('image')) {
 
-            $name = time().'.'.$requestData['image']->extension();
-            $path = 'partner/image';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('image'));
+            $requestData['image'] = $path;
         }
 
         $title = new Translate();
@@ -86,13 +85,13 @@ class PartnerController extends Controller
         $partner->block_id = $requestData['block_id'];
         $partner->save();
 
-        return redirect('admin/partner?block_id='.$requestData['block_id'])->with('flash_message', 'Добавлен');
+        return redirect('admin/partner?block_id=' . $requestData['block_id'])->with('flash_message', 'Добавлен');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -106,7 +105,7 @@ class PartnerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -121,7 +120,7 @@ class PartnerController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -130,19 +129,18 @@ class PartnerController extends Controller
         $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
         $requestData = $request->all();
         $partner = Partner::findOrFail($id);
         if ($request->hasFile('image')) {
-            if($partner->image != null){
+            if ($partner->image != null) {
                 Storage::disk('static')->delete($partner->image);
             }
-            $name = time().'.'.$requestData['image']->extension();
-            $path = 'partner/image';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('image'));
+            $requestData['image'] = $path;
             $partner->image = $requestData['image'];
         }
 
@@ -165,20 +163,20 @@ class PartnerController extends Controller
         $partner->block_id = $requestData['block_id'];
         $partner->update();
 
-        return redirect('admin/partner?block_id='.$request->get('block_id'))->with('flash_message', 'Изменен');
+        return redirect('admin/partner?block_id=' . $request->get('block_id'))->with('flash_message', 'Изменен');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id)
     {
         $partner = Partner::find($id);
-        if($partner->image != null){
+        if ($partner->image != null) {
             Storage::disk('static')->delete($partner->image);
         }
         $title = Translate::find($partner->title);
@@ -187,6 +185,7 @@ class PartnerController extends Controller
         $content = Translate::find($partner->content);
         $content->delete();
         $partner->delete();
-        return redirect('admin/partner?block_id='.$partner->block_id)->with('flash_message', 'Удален');
+
+        return redirect('admin/partner?block_id=' . $partner->block_id)->with('flash_message', 'Удален');
     }
 }

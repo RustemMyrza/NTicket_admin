@@ -18,23 +18,21 @@ class PagesController extends Controller
     public function index(Request $request)
     {
         $slug = $request->get('slug');
-        $page = Page::where('slug',$slug)->first();
+        $page = Page::where('slug', $slug)->first();
 
-        return view('pages.index', compact('page','slug'));
+        return view('pages.index', compact('page', 'slug'));
     }
+
     public function store(Request $request)
     {
-
         $requestData = $request->all();
-
         $page = Page::where('slug', $requestData['slug'])->first();
-
-        if($page){
+        if ($page) {
             $page->update($requestData);
-        }else{
+        } else {
             Page::create($requestData);
         }
 
-        return redirect('admin/pages?slug='.$requestData['slug'])->with('success', 'Изменения сохранены');
+        return redirect('admin/pages?slug=' . $requestData['slug'])->with('success', 'Изменения сохранены');
     }
 }

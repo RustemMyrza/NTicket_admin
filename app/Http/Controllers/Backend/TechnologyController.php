@@ -55,17 +55,13 @@ class TechnologyController extends Controller
         $requestData = $request->all();
 
         if ($request->hasFile('image')) {
-
-            $name = time() . '.' . $requestData['image']->extension();
-            $path = 'technology';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('image'));
+            $requestData['image'] = $path;
         }
 
         if ($request->hasFile('video')) {
-
-            $name = time() . '.' . $requestData['video']->extension();
-            $path = 'technology';
-            $requestData['video'] = $request->file('video')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('video'));
+            $requestData['video'] = $path;
         }
 
         $title = new Translate();
@@ -147,9 +143,8 @@ class TechnologyController extends Controller
             if ($technology->image != null) {
                 Storage::disk('static')->delete($technology->image);
             }
-            $name = time() . '.' . $requestData['image']->extension();
-            $path = 'technology';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('image'));
+            $requestData['image'] = $path;
             $technology->image = $requestData['image'];
         }
 
@@ -157,10 +152,8 @@ class TechnologyController extends Controller
             if ($technology->video != null) {
                 Storage::disk('static')->delete($technology->video);
             }
-            $name = time() . '.' . $requestData['video']->extension();
-            $path = 'technology';
-            $requestData['video'] = $request->file('video')->storeAs($path, $name, 'static');
-
+            $path = $this->uploadImage($request->file('video'));
+            $requestData['video'] = $path;
             $technology->video = $requestData['video'];
         }
 

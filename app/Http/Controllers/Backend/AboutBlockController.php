@@ -53,16 +53,14 @@ class AboutBlockController extends Controller
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.required' => 'Изображение для блока обязательно',
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.required' => 'Изображение для блока обязательно',
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
         $requestData = $request->all();
         if ($request->hasFile('image')) {
-            $name = time().'.'.$requestData['image']->extension();
-            $path = 'about_block';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('image'));
         }
 
         $content = new Translate();
@@ -76,7 +74,7 @@ class AboutBlockController extends Controller
 
         $aboutblock = new AboutBlock();
         $aboutblock->content = $content->id;
-        $aboutblock->image = $requestData['image'];
+        $aboutblock->image = $path ?? null;
         $aboutblock->save();
 
         return redirect('admin/about-block')->with('flash_message', 'Блок добавлен');
@@ -85,7 +83,7 @@ class AboutBlockController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -99,7 +97,7 @@ class AboutBlockController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -114,7 +112,7 @@ class AboutBlockController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -123,21 +121,19 @@ class AboutBlockController extends Controller
         $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
 
         $requestData = $request->all();
         $aboutblock = AboutBlock::findOrFail($id);
         if ($request->hasFile('image')) {
-            if($aboutblock->image != null){
+            if ($aboutblock->image != null) {
                 Storage::disk('static')->delete($aboutblock->image);
             }
-            $name = time().'.'.$requestData['image']->extension();
-            $path = 'about_block';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
-            $aboutblock->image = $requestData['image'];
+            $path = $this->uploadImage($request->file('image'));
+            $aboutblock->image = $path;
         }
 
         $content = Translate::find($aboutblock->content);
@@ -157,19 +153,20 @@ class AboutBlockController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id)
     {
         $aboutblock = AboutBlock::find($id);
-        if($aboutblock->image != null){
+        if ($aboutblock->image != null) {
             Storage::disk('static')->delete($aboutblock->image);
         }
         $content = Translate::find($aboutblock->content);
         $content->delete();
         $aboutblock->delete();
+
         return redirect('admin/about-block')->with('flash_message', 'Блок удален');
     }
 }

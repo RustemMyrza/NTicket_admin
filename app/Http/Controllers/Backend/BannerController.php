@@ -46,19 +46,17 @@ class BannerController extends Controller
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.required' => 'Загрузите изображение',
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.required' => 'Загрузите изображение',
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
 
         $requestData = $request->all();
 
         if ($request->hasFile('image')) {
-
-            $name = time().'.'.$requestData['image']->extension();
-            $path = 'banner/image';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('image'));
+            $requestData['image'] = $path;
         }
 
         $title = new Translate();
@@ -90,7 +88,7 @@ class BannerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -104,7 +102,7 @@ class BannerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -119,7 +117,7 @@ class BannerController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -128,19 +126,18 @@ class BannerController extends Controller
         $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
         $requestData = $request->all();
         $banner = Banner::findOrFail($id);
         if ($request->hasFile('image')) {
-            if($banner->image != null){
+            if ($banner->image != null) {
                 Storage::disk('static')->delete($banner->image);
             }
-            $name = time().'.'.$requestData['image']->extension();
-            $path = 'banner/image';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('image'));
+            $requestData['image'] = $path;
             $banner->image = $requestData['image'];
         }
 
@@ -168,14 +165,14 @@ class BannerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id)
     {
         $banner = Banner::find($id);
-        if($banner->image != null){
+        if ($banner->image != null) {
             Storage::disk('static')->delete($banner->image);
         }
         $title = Translate::find($banner->title);

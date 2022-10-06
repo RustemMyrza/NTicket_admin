@@ -18,14 +18,14 @@ class BlockController extends Controller
         $type = $request->get('type');
         $data = Block::where('block_type', $type)->first();
         $block = collect();
-        if($data){
+        if ($data) {
             $data->content = json_decode($data->content);
             $block->title = $data->title;
             $block->sub_title = $data->content->sub_title;
             $block->content = $data->content->content;
             $block->block_type = $data->block_type;
         }
-        return view('block.index', compact('block','type'));
+        return view('block.index', compact('block', 'type'));
     }
 
     public function store(Request $request)
@@ -34,11 +34,11 @@ class BlockController extends Controller
         $requestData = $request->all();
         $block = Block::where('block_type', $requestData['block_type'])->first();
         $requestData['content'] = json_encode($requestData['content']);
-        if($block){
+        if ($block) {
             $block->update($requestData);
-        }else{
+        } else {
             Block::create($requestData);
         }
-        return redirect('admin/block?type='.$requestData['block_type'])->with('flash_message', 'Блок изменен');
+        return redirect('admin/block?type=' . $requestData['block_type'])->with('flash_message', 'Блок изменен');
     }
 }

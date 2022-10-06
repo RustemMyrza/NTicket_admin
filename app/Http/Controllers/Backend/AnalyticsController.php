@@ -46,19 +46,17 @@ class AnalyticsController extends Controller
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.required' => 'Загрузите изображение',
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.required' => 'Загрузите изображение',
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
 
         $requestData = $request->all();
 
         if ($request->hasFile('image')) {
-
-            $name = time().'.'.$requestData['image']->extension();
-            $path = 'analytics/image';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('image'));
+            $requestData['image'] = $path ?? null;
         }
 
         $title = new Translate();
@@ -91,7 +89,7 @@ class AnalyticsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -105,7 +103,7 @@ class AnalyticsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -120,7 +118,7 @@ class AnalyticsController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -129,19 +127,18 @@ class AnalyticsController extends Controller
         $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
         $requestData = $request->all();
         $analytics = Analytics::findOrFail($id);
         if ($request->hasFile('image')) {
-            if($analytics->image != null){
+            if ($analytics->image != null) {
                 Storage::disk('static')->delete($analytics->image);
             }
-            $name = time().'.'.$requestData['image']->extension();
-            $path = 'analytics/image';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('image'));
+            $requestData['image'] = $path;
             $analytics->image = $requestData['image'];
         }
 
@@ -170,14 +167,14 @@ class AnalyticsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id)
     {
         $analytics = Analytics::find($id);
-        if($analytics->image != null){
+        if ($analytics->image != null) {
             Storage::disk('static')->delete($analytics->image);
         }
         $title = Translate::find($analytics->title);

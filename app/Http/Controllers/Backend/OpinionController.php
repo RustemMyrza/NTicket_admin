@@ -46,26 +46,22 @@ class OpinionController extends Controller
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.required' => 'Загрузите изображение',
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.required' => 'Загрузите изображение',
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
 
         $requestData = $request->all();
 
         if ($request->hasFile('image')) {
-
-            $name = time().'.'.$requestData['image']->extension();
-            $path = 'opinion';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('image'));
+            $requestData['image'] = $path;
         }
 
         if ($request->hasFile('video')) {
-
-            $name = time().'.'.$requestData['video']->extension();
-            $path = 'opinion';
-            $requestData['video'] = $request->file('video')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('video'));
+            $requestData['video'] = $path;
         }
 
         $title = new Translate();
@@ -99,7 +95,7 @@ class OpinionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -113,7 +109,7 @@ class OpinionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\View\View
      */
@@ -128,7 +124,7 @@ class OpinionController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -137,30 +133,27 @@ class OpinionController extends Controller
         $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],
-        [
-            'image.mimes' => 'Проверьте формат изображения',
-            'image.max' => 'Размер файла не может превышать 2МБ'
-        ]);
+            [
+                'image.mimes' => 'Проверьте формат изображения',
+                'image.max' => 'Размер файла не может превышать 2МБ'
+            ]);
         $requestData = $request->all();
         $opinion = Opinion::findOrFail($id);
         if ($request->hasFile('image')) {
-            if($opinion->image != null){
+            if ($opinion->image != null) {
                 Storage::disk('static')->delete($opinion->image);
             }
-            $name = time().'.'.$requestData['image']->extension();
-            $path = 'opinion';
-            $requestData['image'] = $request->file('image')->storeAs($path, $name, 'static');
+            $path = $this->uploadImage($request->file('image'));
+            $requestData['image'] = $path;
             $opinion->image = $requestData['image'];
         }
 
         if ($request->hasFile('video')) {
-            if($opinion->video != null){
+            if ($opinion->video != null) {
                 Storage::disk('static')->delete($opinion->video);
             }
-            $name = time().'.'.$requestData['video']->extension();
-            $path = 'opinion';
-            $requestData['video'] = $request->file('video')->storeAs($path, $name, 'static');
-
+            $path = $this->uploadImage($request->file('video'));
+            $requestData['video'] = $path;
             $opinion->video = $requestData['video'];
         }
 
@@ -189,17 +182,17 @@ class OpinionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id)
     {
         $opinion = Opinion::find($id);
-        if($opinion->image != null){
+        if ($opinion->image != null) {
             Storage::disk('static')->delete($opinion->image);
         }
-        if($opinion->video != null){
+        if ($opinion->video != null) {
             Storage::disk('static')->delete($opinion->video);
         }
         $title = Translate::find($opinion->title);
