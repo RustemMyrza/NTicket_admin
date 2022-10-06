@@ -14,6 +14,7 @@ class TableAnalytics extends Migration
     public function up()
     {
         Schema::create('analytics', function (Blueprint $table) {
+            $table->increments('id');
             $table->timestamps();
             $table->integer('title')->nullable();
             $table->integer('content')->nullable();

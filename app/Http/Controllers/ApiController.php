@@ -8,6 +8,7 @@ use App\Http\Resources\PartnerBlockResource;
 use App\Http\Resources\PartnerResource;
 use App\Http\Resources\ServiceResource;
 use App\Http\Resources\TechnologyResource;
+use App\Models\Analytics;
 use App\Models\Banner;
 use App\Models\AnalyticsBlock;
 use App\Models\AboutBlock;
@@ -16,6 +17,7 @@ use App\Models\Contacts;
 use App\Models\Feedback;
 use App\Models\MarketAnalysi;
 use App\Models\News;
+use App\Models\Opinion;
 use App\Models\Page;
 use App\Models\Partner;
 use App\Models\PartnerBlock;
@@ -44,15 +46,15 @@ class ApiController extends Controller
             ->get();
 
         $data['purposes'] = Purpose::join('translates as title', 'title.id', 'purposes.title')
-            ->select('purposes.id', 'purposes.logo', 'title.'.$lang.' as title')
+            ->select('purposes.id', 'purposes.logo', 'title.' . $lang . ' as title')
             ->get();
 
         $data['news'] = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
-            ->select('news.id', 'news.image', 'news.viewing', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.created_at')
+            ->select('news.id', 'news.image', 'news.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'news.created_at')
             ->get();
 
         $data['technologies'] = Technology::join('translates as title', 'title.id', 'technology.title')->join('translates as content', 'content.id', 'technology.content')
-            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'technology.created_at', 'technology.video')
+            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'technology.created_at', 'technology.video')
             ->get();
 
         $data['partners'] = Partner::pluck('image');
@@ -112,7 +114,7 @@ class ApiController extends Controller
             $data['general']['meta_description'] = $page_general->meta_description;
         }
 
-        $data['analytics'] = AnalyticsBlock::latest()->get();
+        $data['analytics'] = NewsResource::collection(Analytics::latest()->get());
 
         return response()->json($data);
     }
@@ -163,96 +165,125 @@ class ApiController extends Controller
     public function partners(Request $request)
     {
         $request->validate([
-            'lang'  =>  'required',
+            'lang' => 'required',
         ]);
         $partners = PartnerBlock::get();
 
         return response()->json([
-            'data'  =>  PartnerBlockResource::collection($partners),
+            'data' => PartnerBlockResource::collection($partners),
         ]);
     }
 
     public function news(Request $request)
     {
         $request->validate([
-            'lang'  =>  'required',
+            'lang' => 'required',
         ]);
         $lang = $request->lang;
         $news = News::get();
 
         return response()->json([
-            'data'  =>  NewsResource::collection($news),
+            'data' => NewsResource::collection($news),
         ]);
     }
 
     public function technologies(Request $request)
     {
         $request->validate([
-            'lang'  =>  'required',
+            'lang' => 'required',
         ]);
         $lang = $request->lang;
         $technologies = Technology::join('translates as title', 'title.id', 'technology.title')->join('translates as content', 'content.id', 'technology.content')
-            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'technology.video','technology.created_at')
+            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'technology.video', 'technology.created_at')
             ->get();
 
         return response()->json([
-            'data'  =>  $technologies,
+            'data' => $technologies,
         ]);
     }
 
     public function newsById(Request $request)
     {
         $request->validate([
-            'lang'  =>  'required',
-            'id'   =>  'required|exists:news,id',
+            'lang' => 'required',
+            'id' => 'required|exists:news,id',
         ]);
         $lang = $request->lang;
         $news = News::find($request['id']);
 
         return response()->json([
-            'data'  =>  new NewsResource($news),
+            'data' => new NewsResource($news),
         ]);
     }
 
     public function technologyById(Request $request)
     {
         $request->validate([
-            'lang'  =>  'required',
-            'id'   =>  'required|exists:technology,id',
+            'lang' => 'required',
+            'id' => 'required|exists:technology,id',
         ]);
         $lang = $request->lang;
         $tech = Technology::find($request['id']);
 
         return response()->json([
-            'data'  =>  new TechnologyResource($tech),
+            'data' => new TechnologyResource($tech),
         ]);
     }
 
     public function partnerById(Request $request)
     {
         $request->validate([
-            'lang'  =>  'required',
-            'id'   =>  'required|exists:partner,id',
+            'lang' => 'required',
+            'id' => 'required|exists:partner,id',
         ]);
         $lang = $request->lang;
         $tech = Partner::find($request['id']);
 
         return response()->json([
-            'data'  =>  new PartnerResource($tech),
+            'data' => new PartnerResource($tech),
         ]);
     }
 
     public function serviceById(Request $request)
     {
         $request->validate([
-            'lang'  =>  'required',
-            'id'   =>  'required|exists:services,id',
+            'lang' => 'required',
+            'id' => 'required|exists:services,id',
         ]);
         $lang = $request->lang;
         $tech = Service::find($request['id']);
 
         return response()->json([
-            'data'  =>  new ServiceResource($tech),
+            'data' => new ServiceResource($tech),
+        ]);
+    }
+
+    public function opinions(Request $request)
+    {
+        $request->validate([
+            'lang' => 'required',
+        ]);
+        $lang = $request->lang;
+        $opinions = Opinion::join('translates as title', 'title.id', 'opinion.title')->join('translates as content', 'content.id', 'opinion.content')
+            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'opinion.video', 'opinion.created_at')
+            ->get();
+
+        return response()->json([
+            'data' => $opinions,
+        ]);
+    }
+
+    public function opinionById(Request $request)
+    {
+        $request->validate([
+            'lang' => 'required',
+            'id' => 'required|exists:opinion,id',
+        ]);
+        $lang = $request->lang;
+        $opinion = Opinion::find($request['id']);
+
+        return response()->json([
+            'data' => new TechnologyResource($opinion),
         ]);
     }
 }
