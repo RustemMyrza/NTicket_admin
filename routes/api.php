@@ -34,6 +34,7 @@ Route::get('/news-by-id', [\App\Http\Controllers\ApiController::class, 'newsById
 Route::get('/partners-by-id', [\App\Http\Controllers\ApiController::class, 'partnerById']);
 Route::get('/technology-by-id', [\App\Http\Controllers\ApiController::class, 'technologyById']);
 Route::get('/service-by-id', [\App\Http\Controllers\ApiController::class, 'serviceById']);
+Route::get('/analytics-by-id', [\App\Http\Controllers\ApiController::class, 'analyticsById']);
 
 Route::get('/opinions', [\App\Http\Controllers\ApiController::class, 'opinions']);
 Route::get('/opinion-by-id', [\App\Http\Controllers\ApiController::class, 'opinionById']);

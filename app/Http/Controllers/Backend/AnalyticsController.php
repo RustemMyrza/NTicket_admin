@@ -76,11 +76,21 @@ class AnalyticsController extends Controller
         $content->phr = $requestData['content']['phr'];
         $content->save();
 
+        $category = new Translate();
+        $category->ru = $requestData['category']['ru'];
+        $category->en = $requestData['category']['en'];
+        $category->kz = $requestData['category']['kz'];
+        $category->tr = $requestData['category']['tr'];
+        $category->ch = $requestData['category']['ch'];
+        $category->phr = $requestData['category']['phr'];
+        $category->save();
+
         $analytics = new Analytics();
         $analytics->title = $title->id;
         $analytics->content = $content->id;
         $analytics->viewing = $requestData['viewing'];
         $analytics->image = $requestData['image'];
+        $analytics->category = $category->id;
         $analytics->save();
 
         return redirect('admin/analytics')->with('flash_message', 'Добавлен');
@@ -126,11 +136,10 @@ class AnalyticsController extends Controller
     {
         $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ],
-            [
-                'image.mimes' => 'Проверьте формат изображения',
-                'image.max' => 'Размер файла не может превышать 2МБ'
-            ]);
+        ], [
+            'image.mimes' => 'Проверьте формат изображения',
+            'image.max' => 'Размер файла не может превышать 2МБ'
+        ]);
         $requestData = $request->all();
         $analytics = Analytics::findOrFail($id);
         if ($request->hasFile('image')) {
@@ -158,6 +167,29 @@ class AnalyticsController extends Controller
         $content->ch = $requestData['content']['ch'];
         $content->phr = $requestData['content']['phr'];
         $content->update();
+
+        if (isset($analytics->category)) {
+            $category = Translate::find($analytics->category);
+            $category->ru = $requestData['category']['ru'];
+            $category->en = $requestData['category']['en'];
+            $category->kz = $requestData['category']['kz'];
+            $category->tr = $requestData['category']['tr'];
+            $category->ch = $requestData['category']['ch'];
+            $category->phr = $requestData['category']['phr'];
+            $category->update();
+        } else {
+            $category = new Translate();
+            $category->ru = $requestData['category']['ru'];
+            $category->en = $requestData['category']['en'];
+            $category->kz = $requestData['category']['kz'];
+            $category->tr = $requestData['category']['tr'];
+            $category->ch = $requestData['category']['ch'];
+            $category->phr = $requestData['category']['phr'];
+            $category->save();
+            $analytics->category = $category->id;
+        }
+
+
         $analytics->viewing = $requestData['viewing'];
         $analytics->update();
 

@@ -14,10 +14,10 @@ class Analytics extends Model
     protected $table = 'analytics';
 
     /**
-    * The database primary key value.
-    *
-    * @var string
-    */
+     * The database primary key value.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
 
     /**
@@ -25,13 +25,21 @@ class Analytics extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'content', 'viewing', 'image'];
+    protected $fillable = ['title', 'content', 'viewing', 'image', 'category'];
 
-    public function getTitle(){
-        return $this->hasOne(Translate::class, 'id','title');
+    public function getTitle()
+    {
+        return $this->hasOne(Translate::class, 'id', 'title');
     }
+
     public function getContent()
     {
         return $this->hasOne(Translate::class, 'id', 'content');
+    }
+
+    public function category()
+    {
+        return $this->hasOne(Translate::class, 'id', 'category');
+
     }
 }

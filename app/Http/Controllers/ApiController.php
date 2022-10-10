@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AnalyticsResource;
 use App\Http\Resources\NewsResource;
 use App\Http\Resources\PartnerBlockResource;
 use App\Http\Resources\PartnerResource;
@@ -114,7 +115,7 @@ class ApiController extends Controller
             $data['general']['meta_description'] = $page_general->meta_description;
         }
 
-        $data['analytics'] = NewsResource::collection(Analytics::latest()->get());
+        $data['analytics'] = AnalyticsResource::collection(Analytics::latest()->get());
 
         return response()->json($data);
     }
@@ -210,9 +211,35 @@ class ApiController extends Controller
         ]);
         $lang = $request->lang;
         $news = News::find($request['id']);
+        $similars = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
+            ->select('news.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.image', 'news.created_at')
+            ->where('news.id', '!=', $news->id)
+            ->latest()->take(3)->get();
+
 
         return response()->json([
             'data' => new NewsResource($news),
+            'similars'  =>  $similars,
+        ]);
+    }
+
+    public function analyticsById(Request $request)
+    {
+        $request->validate([
+            'lang' => 'required',
+            'id' => 'required|exists:analytics,id',
+        ]);
+        $lang = $request->lang;
+        $analytics = Analytics::find($request['id']);
+        $similars = Analytics::join('translates as title', 'title.id', 'analytics.title')->join('translates as content', 'content.id', 'analytics.content')
+            ->select('analytics.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'analytics.image', 'analytics.created_at')
+            ->where('analytics.id', '!=', $analytics->id)
+            ->latest()->take(3)->get();
+
+
+        return response()->json([
+            'data' => new AnalyticsResource($analytics),
+            'similars'  =>  $similars,
         ]);
     }
 
