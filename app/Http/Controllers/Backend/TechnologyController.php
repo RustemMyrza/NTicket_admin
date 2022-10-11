@@ -59,10 +59,10 @@ class TechnologyController extends Controller
             $requestData['image'] = $path;
         }
 
-        if ($request->hasFile('video')) {
-            $path = $this->uploadImage($request->file('video'));
-            $requestData['video'] = $path;
-        }
+//        if ($request->hasFile('video')) {
+//            $path = $this->uploadImage($request->file('video'));
+//            $requestData['video'] = $path;
+//        }
 
         $title = new Translate();
         $title->ru = $requestData['title']['ru'];
@@ -148,14 +148,14 @@ class TechnologyController extends Controller
             $technology->image = $requestData['image'];
         }
 
-        if ($request->hasFile('video')) {
-            if ($technology->video != null) {
-                Storage::disk('static')->delete($technology->video);
-            }
-            $path = $this->uploadImage($request->file('video'));
-            $requestData['video'] = $path;
-            $technology->video = $requestData['video'];
-        }
+//        if ($request->hasFile('video')) {
+//            if ($technology->video != null) {
+//                Storage::disk('static')->delete($technology->video);
+//            }
+//            $path = $this->uploadImage($request->file('video'));
+//            $requestData['video'] = $path;
+//            $technology->video = $requestData['video'];
+//        }
 
         $title = Translate::find($technology->title);
         $title->ru = $requestData['title']['ru'];
@@ -174,6 +174,7 @@ class TechnologyController extends Controller
         $content->phr = $requestData['content']['phr'];
         $content->update();
         $technology->viewing = $requestData['viewing'];
+        $technology->video = $request->video ?? $technology->video;
         $technology->update();
 
         return redirect('admin/technology')->with('flash_message', 'Изменен');
@@ -192,15 +193,16 @@ class TechnologyController extends Controller
         if ($technology->image != null) {
             Storage::disk('static')->delete($technology->image);
         }
-        if ($technology->video != null) {
-            Storage::disk('static')->delete($technology->video);
-        }
+//        if ($technology->video != null) {
+//            Storage::disk('static')->delete($technology->video);
+//        }
         $title = Translate::find($technology->title);
         $title->delete();
 
         $content = Translate::find($technology->content);
         $content->delete();
         $technology->delete();
+
         return redirect('admin/technology')->with('flash_message', 'Удален');
     }
 }

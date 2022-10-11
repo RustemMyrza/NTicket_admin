@@ -214,7 +214,7 @@ class ApiController extends Controller
         $similars = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
             ->select('news.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.image', 'news.created_at')
             ->where('news.id', '!=', $news->id)
-            ->latest()->take(3)->get();
+            ->latest()->take(4)->get();
 
 
         return response()->json([
@@ -234,7 +234,7 @@ class ApiController extends Controller
         $similars = Analytics::join('translates as title', 'title.id', 'analytics.title')->join('translates as content', 'content.id', 'analytics.content')
             ->select('analytics.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'analytics.image', 'analytics.created_at')
             ->where('analytics.id', '!=', $analytics->id)
-            ->latest()->take(3)->get();
+            ->latest()->take(4)->get();
 
 
         return response()->json([

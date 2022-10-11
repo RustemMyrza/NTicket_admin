@@ -145,13 +145,16 @@
 <!-- <div class="col-md-12" style="padding: 0 !important"> -->
 <div class="form-group col-md-6 {{ $errors->has('video') ? 'has-error' : ''}}">
     <label for="video" class="control-label">{{ 'Видео' }}</label>
-    <input class="form-control" name="video" type="file" id="video"
+    <input class="form-control" name="video" type="text" id="video"
            value="{{ isset($technology->video) ? $technology->video : ''}}">
     {!! $errors->first('video', '<p class="help-block">:message</p>') !!}
     @if(isset($technology->video))
-        <video controls width="400" height="300">
-            <source src="{{ \Config::get('constants.alias.cdn_url').$technology->video}}" type="video/mp4">
-        </video>
+{{--        <video controls width="400" height="300">--}}
+{{--            <source src="{{ \Config::get('constants.alias.cdn_url').$technology->video}}" type="video/mp4">--}}
+{{--        </video>--}}
+        <iframe width="420" height="315"
+                src="{{$technology->video}}">
+        </iframe>
     @endif
 </div>
 <!-- </div> -->
