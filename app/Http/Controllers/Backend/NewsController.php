@@ -81,6 +81,8 @@ class NewsController extends Controller
         $news->content = $content->id;
         $news->viewing = $requestData['viewing'];
         $news->image = $requestData['image'];
+        $news->video = $requestData['video'];
+        $news->link = $requestData['link'];
         $news->save();
 
         return redirect('admin/news')->with('flash_message', 'Добавлен');
@@ -159,6 +161,8 @@ class NewsController extends Controller
         $content->phr = $requestData['content']['phr'];
         $content->update();
         $news->viewing = $requestData['viewing'];
+        $news->video = $requestData['video'];
+        $news->link = $requestData['link'];
         $news->update();
 
         return redirect('admin/news')->with('flash_message', 'Изменен');

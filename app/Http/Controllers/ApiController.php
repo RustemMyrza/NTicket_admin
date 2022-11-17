@@ -48,14 +48,17 @@ class ApiController extends Controller
 
         $data['purposes'] = Purpose::join('translates as title', 'title.id', 'purposes.title')
             ->select('purposes.id', 'purposes.logo', 'title.' . $lang . ' as title')
+            ->orderBy('purposes.created_at','desc')
             ->get();
 
         $data['news'] = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
-            ->select('news.id', 'news.image', 'news.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'news.created_at')
+            ->select('news.id', 'news.image', 'news.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'news.created_at', 'news.video', 'news.link')
+            ->orderBy('news.created_at','desc')
             ->get();
 
         $data['technologies'] = Technology::join('translates as title', 'title.id', 'technology.title')->join('translates as content', 'content.id', 'technology.content')
             ->select('technology.id', 'technology.image', 'technology.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'technology.created_at', 'technology.video')
+            ->orderBy('technology.created_at','desc')
             ->get();
 
         $data['partners'] = Partner::pluck('image');
@@ -181,7 +184,7 @@ class ApiController extends Controller
             'lang' => 'required',
         ]);
         $lang = $request->lang;
-        $news = News::get();
+        $news = News::orderBy('created_at','desc')->get();
 
         return response()->json([
             'data' => NewsResource::collection($news),
@@ -196,6 +199,7 @@ class ApiController extends Controller
         $lang = $request->lang;
         $technologies = Technology::join('translates as title', 'title.id', 'technology.title')->join('translates as content', 'content.id', 'technology.content')
             ->select('technology.id', 'technology.image', 'technology.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'technology.video', 'technology.created_at')
+            ->orderBy('technology.created_at','desc')
             ->get();
 
         return response()->json([
@@ -215,11 +219,17 @@ class ApiController extends Controller
             ->select('news.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.image', 'news.created_at')
             ->where('news.id', '!=', $news->id)
             ->latest()->take(4)->get();
-
+        $populars = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
+            ->select('news.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.image', 'news.created_at', 'news.viewing')
+            ->where('news.id', '!=', $news->id)
+            ->orderBy('news.viewing', 'desc')
+            ->take(5)
+            ->get();
 
         return response()->json([
             'data' => new NewsResource($news),
             'similars'  =>  $similars,
+            'populars'  => $populars
         ]);
     }
 

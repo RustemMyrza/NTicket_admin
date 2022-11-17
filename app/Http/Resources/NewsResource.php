@@ -23,6 +23,8 @@ class NewsResource extends JsonResource
             'content' =>  Translate::where('id', $this->content)->value($lang),
             'viewing'   =>  $this->viewing,
             'image' =>  $this->image,
+            'video' =>  $this->video,
+            'link' =>  $this->link,
             'created_at'    =>  $this->created_at,
         ];
     }

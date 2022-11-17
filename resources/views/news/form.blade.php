@@ -129,6 +129,18 @@
            value="{{ isset($news->viewing) ? $news->viewing : ''}}">
     {!! $errors->first('viewing', '<p class="help-block">:message</p>') !!}
 </div>
+<div class="form-group {{ $errors->has('video') ? 'has-error' : ''}}">
+    <label for="video" class="control-label">{{ 'Видео' }}</label>
+    <input class="form-control" name="video" type="text" id="video"
+           value="{{ isset($news->video) ? $news->video : ''}}">
+    {!! $errors->first('video', '<p class="help-block">:message</p>') !!}
+</div>
+<div class="form-group {{ $errors->has('link') ? 'has-error' : ''}}">
+    <label for="link" class="control-label">{{ 'Ссылка:' }}</label>
+    <input class="form-control" name="link" type="text" id="link"
+           value="{{ isset($news->link) ? $news->link : ''}}">
+    {!! $errors->first('video', '<p class="help-block">:message</p>') !!}
+</div>
 <div class="form-group {{ $errors->has('image') ? 'has-error' : ''}}">
     <label for="image" class="control-label">{{ 'Изображение' }}</label>
     <input class="form-control" name="image" type="file" id="image"
@@ -140,8 +152,6 @@
         <img src="{{ \Config::get('constants.alias.cdn_url').$news->image }}" alt="" width="300px;">
     </div>
 @endif
-
-
 <div class="form-group">
     <input class="btn btn-primary" type="submit" value="{{ $formMode === 'edit' ? 'Обновить' : 'Создать' }}">
 </div>

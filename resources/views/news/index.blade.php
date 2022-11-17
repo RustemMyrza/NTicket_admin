@@ -20,6 +20,7 @@
                 <thead>
                 <tr>
                     <th>#</th>
+                    <th>ID</th>
                     <th>Заголовок</th>
                     <th>Изображение</th>
                     <th>Действия</th>
@@ -29,6 +30,7 @@
                 @foreach($news as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
+                        <td>{{ $item->id }}</td>
                         <td>{{ $item->getTitle->ru }}</td>
                         <td><img src="/storage/{{ $item->image }}" alt="" width="200px;"></td>
                         <td>
