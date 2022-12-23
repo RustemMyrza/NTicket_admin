@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
     <li class="nav-item">
-        <a class="nav-link" id="custom-tabs-one-ru-tab" data-toggle="pill" href="#custom-tabs-one-ru" role="tab" aria-controls="custom-tabs-one-ru" aria-selected="true">Русский</a>
+        <a class="nav-link active" id="custom-tabs-one-ru-tab" data-toggle="pill" href="#custom-tabs-one-ru" role="tab" aria-controls="custom-tabs-one-ru" aria-selected="true">Русский</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" id="custom-tabs-one-en-tab" data-toggle="pill" href="#custom-tabs-one-en" role="tab" aria-controls="custom-tabs-one-en" aria-selected="false">Английский</a>
@@ -20,7 +20,7 @@
 </ul>
 
 <div class="tab-content col-md-12" id="custom-tabs-one-tabContent">
-    <div class="tab-pane fade" id="custom-tabs-one-ru" role="tabpanel" aria-labelledby="custom-tabs-one-ru-tab">
+    <div class="tab-pane active in" id="custom-tabs-one-ru" role="tabpanel" aria-labelledby="custom-tabs-one-ru-tab">
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <label for="content_ru" class="control-label">{{ 'Описание RU' }}</label>
             <input class="form-control" name="content[ru]" type="text" id="content_ru" value="{{ isset($aboutblock->getContent->ru) ? $aboutblock->getContent->ru : old('content.ru')}}" >

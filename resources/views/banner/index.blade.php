@@ -27,7 +27,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->getTitle->ru }}</td>
-                        <td><img src="/storage/{{ $item->image }}" alt="" width="200px;"></td>
+                        <td><img src="{{url("$item->image")}}" alt="" width="200px;"></td>
                         <td>
                             <!-- <a href="{{ url('/admin/banner/' . $item->id) }}" title="Просмотр слайда"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Просмотр</button></a> -->
                             <a href="{{ url('/admin/banner/' . $item->id . '/edit') }}" title="Редактировать баннер"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-alt" aria-hidden="true"></i> Редактировать</button></a>

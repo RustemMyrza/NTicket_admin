@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AnalyticsResource;
 use App\Http\Resources\NewsResource;
+use App\Http\Resources\ContactsResource;
 use App\Http\Resources\PartnerBlockResource;
 use App\Http\Resources\PartnerResource;
 use App\Http\Resources\ServiceResource;
@@ -52,7 +53,7 @@ class ApiController extends Controller
             ->get();
 
         $data['news'] = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
-            ->select('news.id', 'news.image', 'news.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'news.created_at', 'news.video', 'news.link')
+            ->select('news.id', 'news.image', 'news.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'news.created_at', 'news.video', 'news.link', 'news.popular')
             ->orderBy('news.created_at','desc')
             ->get();
 
@@ -66,16 +67,16 @@ class ApiController extends Controller
         return response()->json($data);
     }
 
-    public function header()
+    public function header(Request $request)
     {
-        $data = Contacts::latest()->select('phone_number')->first();
+        $data = Contacts::join('translates as phone','phone.id', 'contacts.phone_number')->latest()->select('phone.'.$request->lang.' as phone_number')->first();
 
         return response()->json($data);
     }
 
     public function footer()
     {
-        $data = Contacts::latest()->first();
+        $data = new ContactsResource(Contacts::latest()->first());
 
         return response()->json($data);
     }
@@ -131,7 +132,7 @@ class ApiController extends Controller
             $data['general']['meta_title'] = $page_general->meta_title;
             $data['general']['meta_description'] = $page_general->meta_description;
         }
-        $data['contacts'] = Contacts::latest()->get();
+        $data['contacts'] = ContactsResource::collection(Contacts::latest()->get());
 
         return response()->json($data);
     }
@@ -171,7 +172,7 @@ class ApiController extends Controller
         $request->validate([
             'lang' => 'required',
         ]);
-        $partners = PartnerBlock::get();
+        $partners = PartnerBlock::orderBy('queue','asc')->get();
 
         return response()->json([
             'data' => PartnerBlockResource::collection($partners),
@@ -184,10 +185,29 @@ class ApiController extends Controller
             'lang' => 'required',
         ]);
         $lang = $request->lang;
-        $news = News::orderBy('created_at','desc')->get();
+        $news = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
+            ->select('news.id', 'news.viewing', 'news.image','news.video','news.link', 'news.popular', 'news.created_at', 'title.'.$lang.' as title', 'content.'.$lang.' as content')
+            ->orderBy('created_at','desc')
+            ->paginate(20);
 
         return response()->json([
-            'data' => NewsResource::collection($news),
+            'data' => $news,
+        ]);
+    }
+
+    public function newsMobile(Request $request)
+    {
+        $request->validate([
+            'lang' => 'required',
+        ]);
+        $lang = $request->lang;
+        $news = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
+            ->select('news.id', 'news.viewing', 'news.image','news.video','news.link','news.popular', 'news.created_at', 'title.'.$lang.' as title', 'content.'.$lang.' as content')
+            ->orderBy('created_at','desc')
+            ->paginate(4);
+
+        return response()->json([
+            'data' => $news,
         ]);
     }
 
@@ -200,7 +220,23 @@ class ApiController extends Controller
         $technologies = Technology::join('translates as title', 'title.id', 'technology.title')->join('translates as content', 'content.id', 'technology.content')
             ->select('technology.id', 'technology.image', 'technology.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'technology.video', 'technology.created_at')
             ->orderBy('technology.created_at','desc')
-            ->get();
+            ->paginate(20);
+
+        return response()->json([
+            'data' => $technologies,
+        ]);
+    }
+
+    public function technologiesMobile(Request $request)
+    {
+        $request->validate([
+            'lang' => 'required',
+        ]);
+        $lang = $request->lang;
+        $technologies = Technology::join('translates as title', 'title.id', 'technology.title')->join('translates as content', 'content.id', 'technology.content')
+            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'technology.video', 'technology.created_at')
+            ->orderBy('technology.created_at','desc')
+            ->paginate(4);
 
         return response()->json([
             'data' => $technologies,
@@ -216,12 +252,12 @@ class ApiController extends Controller
         $lang = $request->lang;
         $news = News::find($request['id']);
         $similars = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
-            ->select('news.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.image', 'news.created_at')
+            ->select('news.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.image', 'news.created_at', 'news.popular')
             ->where('news.id', '!=', $news->id)
             ->latest()->take(4)->get();
         $populars = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
-            ->select('news.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.image', 'news.created_at', 'news.viewing')
-            ->where('news.id', '!=', $news->id)
+            ->select('news.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.image', 'news.created_at', 'news.viewing', 'news.popular')
+            ->where('news.popular', true)
             ->orderBy('news.viewing', 'desc')
             ->take(5)
             ->get();
@@ -302,8 +338,23 @@ class ApiController extends Controller
         ]);
         $lang = $request->lang;
         $opinions = Opinion::join('translates as title', 'title.id', 'opinion.title')->join('translates as content', 'content.id', 'opinion.content')
-            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'opinion.video', 'opinion.created_at')
-            ->get();
+            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'opinion.created_at')
+            ->paginate(20);
+
+        return response()->json([
+            'data' => $opinions,
+        ]);
+    }
+
+    public function opinionsMobile(Request $request)
+    {
+        $request->validate([
+            'lang' => 'required',
+        ]);
+        $lang = $request->lang;
+        $opinions = Opinion::join('translates as title', 'title.id', 'opinion.title')->join('translates as content', 'content.id', 'opinion.content')
+            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'opinion.created_at')
+            ->paginate(4);
 
         return response()->json([
             'data' => $opinions,
@@ -317,10 +368,34 @@ class ApiController extends Controller
             'id' => 'required|exists:opinion,id',
         ]);
         $lang = $request->lang;
-        $opinion = Opinion::find($request['id']);
+//        $opinion = Opinion::find($request['id']);
+        $opinion = Opinion::join('translates as title', 'title.id', 'opinion.title')->join('translates as content', 'content.id', 'opinion.content')
+            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'opinion.created_at')
+            ->where('opinion.id', $request['id'])
+            ->first();
+        return response()->json([
+            'data' => $opinion,
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'text'  =>  'required',
+            'lang'  =>  'required',
+        ]);
+        $lang = $request->lang;
+        $keyword = $request->text;
+        $data = News::join('translates as p_title', 'p_title.id', 'news.title')
+            ->join('translates as p_description', 'p_description.id', 'news.content')
+            ->where('p_title.' . $lang, 'LIKE', '%' . $keyword . '%')
+            ->orWhere('p_description.' . $lang, 'LIKE', '%' . $keyword . '%')
+            ->select('news.id', 'p_title.'.$lang.' as title', 'p_description.'.$lang.' as content')
+            ->orderBy('title', 'ASC')
+            ->paginate(12);
 
         return response()->json([
-            'data' => new TechnologyResource($opinion),
+            'data'  =>  $data
         ]);
     }
 }

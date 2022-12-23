@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
     <li class="nav-item">
-        <a class="nav-link ac" id="custom-tabs-one-ru-tab" data-toggle="pill" href="#custom-tabs-one-ru" role="tab"
+        <a class="nav-link active" id="custom-tabs-one-ru-tab" data-toggle="pill" href="#custom-tabs-one-ru" role="tab"
            aria-controls="custom-tabs-one-ru" aria-selected="true">Русский</a>
     </li>
     <li class="nav-item">
@@ -26,7 +26,7 @@
 </ul>
 
 <div class="tab-content col-md-12" id="custom-tabs-one-tabContent">
-    <div class="tab-pane fade" id="custom-tabs-one-ru" role="tabpanel" aria-labelledby="custom-tabs-one-ru-tab">
+    <div class="tab-pane active in" id="custom-tabs-one-ru" role="tabpanel" aria-labelledby="custom-tabs-one-ru-tab">
         <div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
             <label for="title_ru" class="control-label">{{ 'Наименование RU' }}</label>
             <textarea class="form-control" name="title[ru]" type="text"
@@ -35,7 +35,7 @@
         </div>
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <label for="content_ru" class="control-label">{{ 'Описание RU' }}</label>
-            <textarea class="my-editor form-control" name="content[ru]" id="content_ru">
+            <textarea class="form-control" name="content[ru]" id="content_ru">
                 {{ isset($news->getContent->ru) ? $news->getContent->ru : old('content.ru')}}
             </textarea>
             {!! $errors->first('content[ru]"', '<p class="help-block">:message</p>') !!}
@@ -128,6 +128,15 @@
     <input class="form-control" name="viewing" type="number" id="viewing"
            value="{{ isset($news->viewing) ? $news->viewing : ''}}">
     {!! $errors->first('viewing', '<p class="help-block">:message</p>') !!}
+</div>
+<div class="form-group {{ $errors->has('popular') ? 'has-error' : ''}}">
+    <label for="popular" class="control-label">{{ 'Популярный' }}</label>
+    <input class="form-control" name="popular" type="checkbox" id="popular"
+          @if($news->popular == true)
+              checked
+              @endif
+
+    >
 </div>
 <div class="form-group {{ $errors->has('video') ? 'has-error' : ''}}">
     <label for="video" class="control-label">{{ 'Видео' }}</label>

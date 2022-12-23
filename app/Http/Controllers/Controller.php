@@ -33,7 +33,6 @@ class Controller extends BaseController
     protected function uploadDocument($doc)
     {
         $fileName = 'profile-'.time().'.'.$doc->getClientOriginalExtension();
-
         $path = $doc->storeAs('public/files', $fileName);
 
         return 'storage/files/' . $fileName;

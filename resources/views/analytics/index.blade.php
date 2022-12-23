@@ -31,7 +31,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->getTitle->ru }}</td>
-                            <td><img src="{{ \Config::get('constants.alias.cdn_url').$item->image }}" alt=""
+                            <td><img src="{{url("$item->image")}}" alt=""
                                      style="max-width: 100px;"></td>
                             <td>
                                 <!-- <a href="{{ url('/admin/analytics/' . $item->id) }}" title="Просмотр слайда"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Просмотр</button></a> -->

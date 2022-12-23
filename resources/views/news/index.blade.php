@@ -22,6 +22,7 @@
                     <th>#</th>
                     <th>ID</th>
                     <th>Заголовок</th>
+                    <th>Популярный</th>
                     <th>Изображение</th>
                     <th>Действия</th>
                 </tr>
@@ -32,7 +33,10 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->getTitle->ru }}</td>
-                        <td><img src="/storage/{{ $item->image }}" alt="" width="200px;"></td>
+                        <td>
+                            {{$item->popular == 1 ? 'Да' : 'Нет'}}
+                        </td>
+                        <td><img src="{{url("$item->image")}}" alt="" width="200px;"></td>
                         <td>
                             <!-- <a href="{{ url('/admin/news/' . $item->id) }}" title="Просмотр слайда"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Просмотр</button></a> -->
                             <a href="{{ url('/admin/news/' . $item->id . '/edit') }}" title="Редактировать">

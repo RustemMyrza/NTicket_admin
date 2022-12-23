@@ -25,6 +25,7 @@ class NewsResource extends JsonResource
             'image' =>  $this->image,
             'video' =>  $this->video,
             'link' =>  $this->link,
+            'popular' =>  boolval($this->popular),
             'created_at'    =>  $this->created_at,
         ];
     }

@@ -31,7 +31,9 @@ class NewsController extends Controller
      */
     public function create()
     {
-        return view('news.create');
+        $news = new News();
+
+        return view('news.create', compact('news'));
     }
 
     /**
@@ -83,6 +85,7 @@ class NewsController extends Controller
         $news->image = $requestData['image'];
         $news->video = $requestData['video'];
         $news->link = $requestData['link'];
+        $news->popular = $request->popular ? true : false;
         $news->save();
 
         return redirect('admin/news')->with('flash_message', 'Добавлен');
@@ -163,6 +166,7 @@ class NewsController extends Controller
         $news->viewing = $requestData['viewing'];
         $news->video = $requestData['video'];
         $news->link = $requestData['link'];
+        $news->popular = $request->popular ? true : false;
         $news->update();
 
         return redirect('admin/news')->with('flash_message', 'Изменен');

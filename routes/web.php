@@ -22,7 +22,10 @@ Route::get('/linkstorage', function () {
 // admin@demo.com
 // Dtnthievbn2021
 
-Auth::routes();
+Auth::routes([
+    'register' => false,
+    'reset'    =>  false,
+]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/admin/edit', [App\Http\Controllers\HomeController::class, 'edit'])->name('edit');

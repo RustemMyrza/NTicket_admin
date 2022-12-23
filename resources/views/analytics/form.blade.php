@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
     <li class="nav-item">
-        <a class="nav-link" id="custom-tabs-one-ru-tab" data-toggle="pill" href="#custom-tabs-one-ru" role="tab"
+        <a class="nav-link active" id="custom-tabs-one-ru-tab" data-toggle="pill" href="#custom-tabs-one-ru" role="tab"
            aria-controls="custom-tabs-one-ru" aria-selected="true">Русский</a>
     </li>
     <li class="nav-item">
@@ -26,7 +26,7 @@
 </ul>
 
 <div class="tab-content col-md-12" id="custom-tabs-one-tabContent">
-    <div class="tab-pane fade" id="custom-tabs-one-ru" role="tabpanel" aria-labelledby="custom-tabs-one-ru-tab">
+    <div class="tab-pane active in" id="custom-tabs-one-ru" role="tabpanel" aria-labelledby="custom-tabs-one-ru-tab">
         <div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
             <label for="title_ru" class="control-label">{{ 'Наименование RU' }}</label>
             <input class="form-control" name="title[ru]" type="text" id="title_ru"
@@ -35,8 +35,9 @@
         </div>
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <label for="content_ru" class="control-label">{{ 'Описание RU' }}</label>
-            <input class="form-control" name="content[ru]" type="text" id="content_ru"
-                   value="{{ isset($analytics->getContent->ru) ? $analytics->getContent->ru : old('content.ru')}}">
+            <textarea class="form-control" name="content[ru]" id="content_ru">
+                {{ isset($analytics->getContent->ru) ? $analytics->getContent->ru : old('content.ru')}}
+            </textarea>
             {!! $errors->first('content[ru]"', '<p class="help-block">:message</p>') !!}
         </div>
 
@@ -57,8 +58,9 @@
         </div>
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <label for="content_ru" class="control-label">{{ 'Описание EN' }}</label>
-            <input class="form-control" name="content[en]" type="text" id="content_ru"
-                   value="{{ isset($analytics->getContent->en) ? $analytics->getContent->en : old('content.en')}}">
+            <textarea class="form-control" name="content[en]" id="content_ru">
+                {{ isset($analytics->getContent->en) ? $analytics->getContent->en : old('content.en')}}
+            </textarea>
             {!! $errors->first('content[ru]"', '<p class="help-block">:message</p>') !!}
         </div>
 
@@ -79,8 +81,9 @@
         </div>
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <label for="content_kz" class="control-label">{{ 'Описание KZ' }}</label>
-            <input class="form-control" name="content[kz]" type="text" id="content_kz"
-                   value="{{ isset($analytics->getContent->kz) ? $analytics->getContent->kz : old('content.kz')}}">
+            <textarea class="form-control" name="content[kz]" id="content_kz">
+                {{ isset($analytics->getContent->kz) ? $analytics->getContent->kz : old('content.kz')}}
+            </textarea>
             {!! $errors->first('content[kz]"', '<p class="help-block">:message</p>') !!}
         </div>
         <div class="form-group {{ $errors->has('category') ? 'has-error' : ''}}">
@@ -100,8 +103,9 @@
         </div>
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <label for="content_tr" class="control-label">{{ 'Описание TUR' }}</label>
-            <input class="form-control" name="content[tr]" type="text" id="content_tr"
-                   value="{{ isset($analytics->getContent->tr) ? $analytics->getContent->tr : old('content.tr')}}">
+            <textarea class="form-control" name="content[tr]" id="content_tr">
+                {{ isset($analytics->getContent->tr) ? $analytics->getContent->tr : old('content.tr')}}
+            </textarea>
             {!! $errors->first('content[tr]"', '<p class="help-block">:message</p>') !!}
         </div>
         <div class="form-group {{ $errors->has('category') ? 'has-error' : ''}}">
@@ -121,8 +125,9 @@
         </div>
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <label for="content_ch" class="control-label">{{ 'Описание CHI' }}</label>
-            <input class="form-control" name="content[ch]" type="text" id="content_ch"
-                   value="{{ isset($analytics->getContent->ch) ? $analytics->getContent->ch : old('content.ch')}}">
+            <textarea class="form-control" name="content[ch]" id="content_ch">
+                {{ isset($analytics->getContent->ch) ? $analytics->getContent->ch : old('content.ch')}}
+            </textarea>
             {!! $errors->first('content[ch]"', '<p class="help-block">:message</p>') !!}
         </div>
         <div class="form-group {{ $errors->has('category') ? 'has-error' : ''}}">
@@ -136,14 +141,15 @@
     <div class="tab-pane fade" id="custom-tabs-one-phr" role="tabpanel" aria-labelledby="custom-tabs-one-phr-tab">
         <div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
             <label for="title_phr" class="control-label">{{ 'Наименование PRS' }}</label>
-            <input class="form-control" name="title[phr]" type="text" id="title_phr"
+            <input class="form-control" name="title[phr]" id="title_phr"
                    value="{{ isset($analytics->getTitle->phr) ? $analytics->getTitle->phr : old('title.phr')}}">
             {!! $errors->first('title[phr]', '<p class="help-block">:message</p>') !!}
         </div>
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <label for="content_phr" class="control-label">{{ 'Описание PRS' }}</label>
-            <input class="form-control" name="content[phr]" type="text" id="content_phr"
-                   value="{{ isset($analytics->getContent->phr) ? $analytics->getContent->phr : old('content.phr')}}">
+            <textarea class="form-control" name="content[phr]" type="text" id="content_phr">
+                {{ isset($analytics->getContent->phr) ? $analytics->getContent->phr : old('content.phr')}}
+            </textarea>
             {!! $errors->first('content[phr]"', '<p class="help-block">:message</p>') !!}
         </div>
         <div class="form-group {{ $errors->has('category') ? 'has-error' : ''}}">

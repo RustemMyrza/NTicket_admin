@@ -19,7 +19,7 @@ class PartnerBlockController extends Controller
     public function index(Request $request)
     {
         $perPage = 25;
-        $partner_blocks = PartnerBlock::latest()->paginate($perPage);
+        $partner_blocks = PartnerBlock::orderBy('queue', 'asc')->paginate($perPage);
 
         return view('partner-block.index', compact('partner_blocks'));
     }
@@ -31,7 +31,9 @@ class PartnerBlockController extends Controller
      */
     public function create()
     {
-        return view('partner-block.create');
+        $partner_blocks = new PartnerBlock();
+
+        return view('partner-block.create', compact('partner_blocks'));
     }
 
     /**
@@ -66,6 +68,7 @@ class PartnerBlockController extends Controller
         $partner_blocks = new PartnerBlock();
         $partner_blocks->title = $title->id;
         $partner_blocks->content = $content->id;
+        $partner_blocks->queue = $request->queue;
         $partner_blocks->save();
 
         return redirect('admin/partner-blocks')->with('flash_message', 'Добавлен');
@@ -130,6 +133,8 @@ class PartnerBlockController extends Controller
         $content->ch = $requestData['content']['ch'];
         $content->phr = $requestData['content']['phr'];
         $content->update();
+        $partner_blocks->queue = $request->queue;
+        $partner_blocks->save();
 
         return redirect('admin/partner-blocks')->with('flash_message', 'Изменен');
     }

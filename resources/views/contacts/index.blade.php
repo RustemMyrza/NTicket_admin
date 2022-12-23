@@ -136,7 +136,7 @@
                     <div class="form-group {{ $errors->has('address2') ? 'has-error' : ''}}">
                         <label for="address2" class="control-label">{{ 'Адрес2' }}</label>
                         <input class="form-control" name="address2[en]" type="text" id="address2"
-                               value="{{ isset($contacts->address2) ? $contacts->getAddress->en : ''}}">
+                               value="{{ isset($contacts->address2) ? $contacts->getAddress2->en : ''}}">
                     </div>
 
                     <div class="form-group {{ $errors->has('whats_app') ? 'has-error' : ''}}">
@@ -195,7 +195,7 @@
                     <div class="form-group {{ $errors->has('address2') ? 'has-error' : ''}}">
                         <label for="address2" class="control-label">{{ 'Адрес2' }}</label>
                         <input class="form-control" name="address2[kz]" type="text" id="address2"
-                               value="{{ isset($contacts->address2) ? $contacts->getAddress->kz : ''}}">
+                               value="{{ isset($contacts->address2) ? $contacts->getAddress2->kz : ''}}">
                     </div>
 
                     <div class="form-group {{ $errors->has('whats_app') ? 'has-error' : ''}}">
@@ -253,7 +253,7 @@
                     <div class="form-group {{ $errors->has('address2') ? 'has-error' : ''}}">
                         <label for="address2" class="control-label">{{ 'Адрес2' }}</label>
                         <input class="form-control" name="address2[tr]" type="text" id="address2"
-                               value="{{ isset($contacts->address2) ? $contacts->getAddress->tr : ''}}">
+                               value="{{ isset($contacts->address2) ? $contacts->getAddress2->tr : ''}}">
                     </div>
 
                     <div class="form-group {{ $errors->has('whats_app') ? 'has-error' : ''}}">
@@ -311,7 +311,7 @@
                     <div class="form-group {{ $errors->has('address2') ? 'has-error' : ''}}">
                         <label for="address2" class="control-label">{{ 'Адрес2' }}</label>
                         <input class="form-control" name="address2[ch]" type="text" id="address2"
-                               value="{{ isset($contacts->address2) ? $contacts->getAddress->ch : ''}}">
+                               value="{{ isset($contacts->address2) ? $contacts->getAddress2->ch : ''}}">
                     </div>
 
                     <div class="form-group {{ $errors->has('whats_app') ? 'has-error' : ''}}">
@@ -370,7 +370,7 @@
                     <div class="form-group {{ $errors->has('address2') ? 'has-error' : ''}}">
                         <label for="address2" class="control-label">{{ 'Адрес2' }}</label>
                         <input class="form-control" name="address2[phr]" type="text" id="address2"
-                               value="{{ isset($contacts->address2) ? $contacts->getAddress->phr : ''}}">
+                               value="{{ isset($contacts->address2) ? $contacts->getAddress2->phr : ''}}">
                     </div>
 
                     <div class="form-group {{ $errors->has('whats_app') ? 'has-error' : ''}}">
