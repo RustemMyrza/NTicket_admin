@@ -25,7 +25,7 @@ class Analytics extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'content', 'viewing', 'image', 'category'];
+    protected $fillable = ['title', 'content', 'viewing', 'image', 'category', 'meta_title', 'meta_description'];
 
     public function getTitle()
     {
@@ -40,6 +40,15 @@ class Analytics extends Model
     public function category()
     {
         return $this->hasOne(Translate::class, 'id', 'category');
+    }
 
+    protected function metaTitle()
+    {
+        return $this->hasOne(Translate::class, 'id', 'meta_title');
+    }
+
+    protected function metaDescription()
+    {
+        return $this->hasOne(Translate::class, 'id', 'meta_description');
     }
 }

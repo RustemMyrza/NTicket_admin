@@ -193,4 +193,57 @@ class NewsController extends Controller
         $news->delete();
         return redirect('admin/news')->with('flash_message', 'Удален');
     }
+
+    public function seo($id)
+    {
+        $news = News::find($id);
+
+        return view('news.seo', compact('news'));
+    }
+
+    public function seoStore(Request $request)
+    {
+        $news = News::find($request['news_id']);
+        if (isset($news->meta_title)) {
+            $this->translateUpdate($news->meta_title, $request['title']);
+        } else {
+            $title = $this->translateCreate($request['title']);
+            $news->meta_title = $title->id;
+        }
+
+        if (isset($news->meta_description)) {
+            $this->translateUpdate($news->meta_description, $request['content']);
+        } else {
+            $desc = $this->translateCreate($request['content']);
+            $news->meta_description = $desc->id;
+        }
+
+        $news->save();
+
+        return redirect()->route('news.index')->with('success', 'Успешно сохранилось SEO.');
+    }
+
+    protected function translateCreate($data)
+    {
+        return Translate::create([
+            'ru'    =>  $data['ru'],
+            'en'    =>  $data['en'],
+            'kz'    =>  $data['kz'],
+            'tr'    =>  $data['tr'],
+            'ch'    =>  $data['ch'],
+            'phr'    =>  $data['phr'],
+        ]);
+    }
+
+    protected function translateUpdate($id, $data)
+    {
+        Translate::find($id)->update([
+            'ru'    =>  $data['ru'],
+            'en'    =>  $data['en'],
+            'kz'    =>  $data['kz'],
+            'tr'    =>  $data['tr'],
+            'ch'    =>  $data['ch'],
+            'phr'    =>  $data['phr'],
+        ]);
+    }
 }

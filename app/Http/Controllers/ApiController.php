@@ -49,17 +49,29 @@ class ApiController extends Controller
 
         $data['purposes'] = Purpose::join('translates as title', 'title.id', 'purposes.title')
             ->select('purposes.id', 'purposes.logo', 'title.' . $lang . ' as title')
-            ->orderBy('purposes.created_at','desc')
+            ->orderBy('purposes.created_at', 'desc')
             ->get();
 
-        $data['news'] = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
-            ->select('news.id', 'news.image', 'news.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'news.created_at', 'news.video', 'news.link', 'news.popular')
-            ->orderBy('news.created_at','desc')
+        $data['news'] = News::join('translates as title', 'title.id', 'news.title')
+            ->join('translates as content', 'content.id', 'news.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'news.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'news.meta_description')
+            ->select('news.id', 'news.image', 'news.viewing', 'title.' . $lang . ' as title',
+                'content.' . $lang . ' as content', 'news.created_at', 'news.video', 'news.link', 'news.popular',
+                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
+            ->orderBy('news.created_at', 'desc')
             ->get();
 
-        $data['technologies'] = Technology::join('translates as title', 'title.id', 'technology.title')->join('translates as content', 'content.id', 'technology.content')
-            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'technology.created_at', 'technology.video')
-            ->orderBy('technology.created_at','desc')
+        $data['technologies'] = Technology::join('translates as title', 'title.id', 'technology.title')
+            ->join('translates as content', 'content.id', 'technology.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'technology.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'technology.meta_description')
+            ->select('technology.id', 'technology.image', 'technology.viewing',
+                'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'technology.created_at',
+                'technology.video', 'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
+            ->orderBy('technology.created_at', 'desc')
             ->get();
 
         $data['partners'] = Partner::pluck('image');
@@ -69,7 +81,8 @@ class ApiController extends Controller
 
     public function header(Request $request)
     {
-        $data = Contacts::join('translates as phone','phone.id', 'contacts.phone_number')->latest()->select('phone.'.$request->lang.' as phone_number')->first();
+        $data = Contacts::join('translates as phone', 'phone.id', 'contacts.phone_number')
+            ->select('phone.' . $request->lang . ' as phone_number')->first();
 
         return response()->json($data);
     }
@@ -172,7 +185,7 @@ class ApiController extends Controller
         $request->validate([
             'lang' => 'required',
         ]);
-        $partners = PartnerBlock::orderBy('queue','asc')->get();
+        $partners = PartnerBlock::orderBy('queue', 'asc')->get();
 
         return response()->json([
             'data' => PartnerBlockResource::collection($partners),
@@ -185,9 +198,15 @@ class ApiController extends Controller
             'lang' => 'required',
         ]);
         $lang = $request->lang;
-        $news = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
-            ->select('news.id', 'news.viewing', 'news.image','news.video','news.link', 'news.popular', 'news.created_at', 'title.'.$lang.' as title', 'content.'.$lang.' as content')
-            ->orderBy('created_at','desc')
+        $news = News::join('translates as title', 'title.id', 'news.title')
+            ->join('translates as content', 'content.id', 'news.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'news.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'news.meta_description')
+            ->select('news.id', 'news.viewing', 'news.image', 'news.video', 'news.link', 'news.popular',
+                'news.created_at', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content',
+                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
+            ->orderBy('created_at', 'desc')
             ->paginate(20);
 
         return response()->json([
@@ -201,9 +220,15 @@ class ApiController extends Controller
             'lang' => 'required',
         ]);
         $lang = $request->lang;
-        $news = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
-            ->select('news.id', 'news.viewing', 'news.image','news.video','news.link','news.popular', 'news.created_at', 'title.'.$lang.' as title', 'content.'.$lang.' as content')
-            ->orderBy('created_at','desc')
+        $news = News::join('translates as title', 'title.id', 'news.title')
+            ->join('translates as content', 'content.id', 'news.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'news.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'news.meta_description')
+            ->select('news.id', 'news.viewing', 'news.image', 'news.video', 'news.link', 'news.popular',
+                'news.created_at', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content',
+                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
+            ->orderBy('created_at', 'desc')
             ->paginate(4);
 
         return response()->json([
@@ -217,9 +242,15 @@ class ApiController extends Controller
             'lang' => 'required',
         ]);
         $lang = $request->lang;
-        $technologies = Technology::join('translates as title', 'title.id', 'technology.title')->join('translates as content', 'content.id', 'technology.content')
-            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'technology.video', 'technology.created_at')
-            ->orderBy('technology.created_at','desc')
+        $technologies = Technology::join('translates as title', 'title.id', 'technology.title')
+            ->join('translates as content', 'content.id', 'technology.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'technology.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'technology.meta_description')
+            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.' . $lang . ' as title',
+                'content.' . $lang . ' as content', 'technology.video', 'technology.created_at',
+                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
+            ->orderBy('technology.created_at', 'desc')
             ->paginate(20);
 
         return response()->json([
@@ -233,9 +264,15 @@ class ApiController extends Controller
             'lang' => 'required',
         ]);
         $lang = $request->lang;
-        $technologies = Technology::join('translates as title', 'title.id', 'technology.title')->join('translates as content', 'content.id', 'technology.content')
-            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'technology.video', 'technology.created_at')
-            ->orderBy('technology.created_at','desc')
+        $technologies = Technology::join('translates as title', 'title.id', 'technology.title')
+            ->join('translates as content', 'content.id', 'technology.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'technology.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'technology.meta_description')
+            ->select('technology.id', 'technology.image', 'technology.viewing', 'title.' . $lang . ' as title',
+                'content.' . $lang . ' as content', 'technology.video', 'technology.created_at',
+                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
+            ->orderBy('technology.created_at', 'desc')
             ->paginate(4);
 
         return response()->json([
@@ -251,12 +288,25 @@ class ApiController extends Controller
         ]);
         $lang = $request->lang;
         $news = News::find($request['id']);
-        $similars = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
-            ->select('news.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.image', 'news.created_at', 'news.popular')
+        $similars = News::join('translates as title', 'title.id', 'news.title')
+            ->join('translates as content', 'content.id', 'news.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'news.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'news.meta_description')
+            ->select('news.id', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'news.image',
+                'news.created_at', 'news.popular',
+                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
             ->where('news.id', '!=', $news->id)
             ->latest()->take(4)->get();
-        $populars = News::join('translates as title', 'title.id', 'news.title')->join('translates as content', 'content.id', 'news.content')
-            ->select('news.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'news.image', 'news.created_at', 'news.viewing', 'news.popular')
+
+        $populars = News::join('translates as title', 'title.id', 'news.title')
+            ->join('translates as content', 'content.id', 'news.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'news.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'news.meta_description')
+            ->select('news.id', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content',
+                'news.image', 'news.created_at', 'news.viewing', 'news.popular',
+                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
             ->where('news.popular', true)
             ->orderBy('news.viewing', 'desc')
             ->take(5)
@@ -264,8 +314,8 @@ class ApiController extends Controller
 
         return response()->json([
             'data' => new NewsResource($news),
-            'similars'  =>  $similars,
-            'populars'  => $populars
+            'similars' => $similars,
+            'populars' => $populars
         ]);
     }
 
@@ -277,15 +327,21 @@ class ApiController extends Controller
         ]);
         $lang = $request->lang;
         $analytics = Analytics::find($request['id']);
-        $similars = Analytics::join('translates as title', 'title.id', 'analytics.title')->join('translates as content', 'content.id', 'analytics.content')
-            ->select('analytics.id', 'title.'.$lang.' as title', 'content.'.$lang.' as content', 'analytics.image', 'analytics.created_at')
+        $similars = Analytics::join('translates as title', 'title.id', 'analytics.title')
+            ->join('translates as content', 'content.id', 'analytics.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'analytics.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'analytics.meta_description')
+            ->select('analytics.id', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'analytics.image',
+                'analytics.created_at',
+                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
             ->where('analytics.id', '!=', $analytics->id)
             ->latest()->take(4)->get();
 
 
         return response()->json([
             'data' => new AnalyticsResource($analytics),
-            'similars'  =>  $similars,
+            'similars' => $similars,
         ]);
     }
 
@@ -337,8 +393,14 @@ class ApiController extends Controller
             'lang' => 'required',
         ]);
         $lang = $request->lang;
-        $opinions = Opinion::join('translates as title', 'title.id', 'opinion.title')->join('translates as content', 'content.id', 'opinion.content')
-            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'opinion.created_at')
+        $opinions = Opinion::join('translates as title', 'title.id', 'opinion.title')
+            ->join('translates as content', 'content.id', 'opinion.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'opinion.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'opinion.meta_description')
+            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title',
+                'content.' . $lang . ' as content', 'opinion.created_at',
+                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
             ->paginate(20);
 
         return response()->json([
@@ -352,8 +414,14 @@ class ApiController extends Controller
             'lang' => 'required',
         ]);
         $lang = $request->lang;
-        $opinions = Opinion::join('translates as title', 'title.id', 'opinion.title')->join('translates as content', 'content.id', 'opinion.content')
-            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'opinion.created_at')
+        $opinions = Opinion::join('translates as title', 'title.id', 'opinion.title')
+            ->join('translates as content', 'content.id', 'opinion.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'opinion.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'opinion.meta_description')
+            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title',
+                'content.' . $lang . ' as content', 'opinion.created_at',
+                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
             ->paginate(4);
 
         return response()->json([
@@ -369,8 +437,14 @@ class ApiController extends Controller
         ]);
         $lang = $request->lang;
 //        $opinion = Opinion::find($request['id']);
-        $opinion = Opinion::join('translates as title', 'title.id', 'opinion.title')->join('translates as content', 'content.id', 'opinion.content')
-            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'opinion.created_at')
+        $opinion = Opinion::join('translates as title', 'title.id', 'opinion.title')
+            ->join('translates as content', 'content.id', 'opinion.content')
+            ->join('translates as metaTitle', 'metaTitle.id', 'opinion.meta_title')
+            ->join('translates as metaDescription', 'metaDescription.id', 'opinion.meta_description')
+            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title',
+                'content.' . $lang . ' as content', 'opinion.created_at',
+                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+            )
             ->where('opinion.id', $request['id'])
             ->first();
         return response()->json([
@@ -381,8 +455,8 @@ class ApiController extends Controller
     public function search(Request $request)
     {
         $request->validate([
-            'text'  =>  'required',
-            'lang'  =>  'required',
+            'text' => 'required',
+            'lang' => 'required',
         ]);
         $lang = $request->lang;
         $keyword = $request->text;
@@ -390,12 +464,12 @@ class ApiController extends Controller
             ->join('translates as p_description', 'p_description.id', 'news.content')
             ->where('p_title.' . $lang, 'LIKE', '%' . $keyword . '%')
             ->orWhere('p_description.' . $lang, 'LIKE', '%' . $keyword . '%')
-            ->select('news.id', 'p_title.'.$lang.' as title', 'p_description.'.$lang.' as content')
+            ->select('news.id', 'p_title.' . $lang . ' as title', 'p_description.' . $lang . ' as content')
             ->orderBy('title', 'ASC')
             ->paginate(12);
 
         return response()->json([
-            'data'  =>  $data
+            'data' => $data
         ]);
     }
 }

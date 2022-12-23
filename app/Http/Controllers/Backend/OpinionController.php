@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\News;
 use File;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Opinion;
@@ -202,5 +203,58 @@ class OpinionController extends Controller
         $content->delete();
         $opinion->delete();
         return redirect('admin/opinion')->with('flash_message', 'Удален');
+    }
+
+    public function seo($id)
+    {
+        $opinion = Opinion::find($id);
+
+        return view('opinion.seo', compact('opinion'));
+    }
+
+    public function seoStore(Request $request)
+    {
+        $opinion = Opinion::find($request['opinion_id']);
+        if (isset($opinion->meta_title)) {
+            $this->translateUpdate($opinion->meta_title, $request['title']);
+        } else {
+            $title = $this->translateCreate($request['title']);
+            $opinion->meta_title = $title->id;
+        }
+
+        if (isset($opinion->meta_description)) {
+            $this->translateUpdate($opinion->meta_description, $request['content']);
+        } else {
+            $desc = $this->translateCreate($request['content']);
+            $opinion->meta_description = $desc->id;
+        }
+
+        $opinion->save();
+
+        return redirect()->route('opinion.index')->with('success', 'Успешно сохранилось SEO.');
+    }
+
+    protected function translateCreate($data)
+    {
+        return Translate::create([
+            'ru'    =>  $data['ru'],
+            'en'    =>  $data['en'],
+            'kz'    =>  $data['kz'],
+            'tr'    =>  $data['tr'],
+            'ch'    =>  $data['ch'],
+            'phr'    =>  $data['phr'],
+        ]);
+    }
+
+    protected function translateUpdate($id, $data)
+    {
+        Translate::find($id)->update([
+            'ru'    =>  $data['ru'],
+            'en'    =>  $data['en'],
+            'kz'    =>  $data['kz'],
+            'tr'    =>  $data['tr'],
+            'ch'    =>  $data['ch'],
+            'phr'    =>  $data['phr'],
+        ]);
     }
 }

@@ -34,7 +34,12 @@
                             <td><img src="{{url("$item->image")}}" alt=""
                                      style="max-width: 100px;"></td>
                             <td>
-                                <!-- <a href="{{ url('/admin/analytics/' . $item->id) }}" title="Просмотр слайда"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Просмотр</button></a> -->
+                            <!-- <a href="{{ url('/admin/analytics/' . $item->id) }}" title="Просмотр слайда"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Просмотр</button></a> -->
+
+                                <a class="btn btn-success btn-sm" href="{{route('analytics-seo', $item->id)}}">
+                                    Настроить SEO
+                                </a>
+
                                 <a href="{{ url('/admin/analytics/' . $item->id . '/edit') }}" title="Редактировать">
                                     <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-alt"
                                                                               aria-hidden="true"></i> Редактировать
@@ -58,7 +63,7 @@
                 </tbody>
             </table>
             <div
-                class="pagination-wrapper"> {!! $analytics->appends(['search' => Request::get('search')])->render() !!} </div>
+                    class="pagination-wrapper"> {!! $analytics->appends(['search' => Request::get('search')])->render() !!} </div>
         </div>
     </div>
 @endsection

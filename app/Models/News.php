@@ -14,10 +14,10 @@ class News extends Model
     protected $table = 'news';
 
     /**
-    * The database primary key value.
-    *
-    * @var string
-    */
+     * The database primary key value.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
 
     /**
@@ -25,13 +25,26 @@ class News extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'content', 'viewing', 'image'];
+    protected $fillable = ['title', 'content', 'viewing', 'image', 'meta_title', 'meta_description'];
 
-    public function getTitle(){
-        return $this->hasOne(Translate::class, 'id','title');
+    public function getTitle()
+    {
+        return $this->hasOne(Translate::class, 'id', 'title');
     }
+
     public function getContent()
     {
         return $this->hasOne(Translate::class, 'id', 'content');
     }
+
+    protected function metaTitle()
+    {
+        return $this->hasOne(Translate::class, 'id', 'meta_title');
+    }
+
+    protected function metaDescription()
+    {
+        return $this->hasOne(Translate::class, 'id', 'meta_description');
+    }
+
 }

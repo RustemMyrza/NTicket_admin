@@ -33,6 +33,11 @@
                         <td><img src="{{ url("$item->image") }}" alt="" width="200px;"></td>
                         <td>
                         <!-- <a href="{{ url('/admin/opinion/' . $item->id) }}" title="Просмотр слайда"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Просмотр</button></a> -->
+
+                            <a class="btn btn-success btn-sm" href="{{route('opinions-seo', $item->id)}}">
+                                Настроить SEO
+                            </a>
+
                             <a href="{{ url('/admin/opinion/' . $item->id . '/edit') }}" title="Редактировать">
                                 <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-alt"
                                                                           aria-hidden="true"></i> Редактировать

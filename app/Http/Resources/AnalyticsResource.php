@@ -25,6 +25,8 @@ class AnalyticsResource extends JsonResource
             'image' => $this->image,
             'created_at' => $this->created_at,
             'category'  => isset($this->category) ? Translate::where('id', $this->category)->value($lang) : null,
+            'meta_title'    =>  $this->metaTitle->$lang,
+            'meta_description'    =>  $this->metaDescription->$lang,
         ];
     }
 }

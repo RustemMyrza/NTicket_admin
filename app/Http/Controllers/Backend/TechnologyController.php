@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\News;
 use File;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Technology;
@@ -204,5 +205,59 @@ class TechnologyController extends Controller
         $technology->delete();
 
         return redirect('admin/technology')->with('flash_message', 'Удален');
+    }
+
+    public function seo($id)
+    {
+        $technology = Technology::find($id);
+
+        return view('technology.seo', compact('technology'));
+    }
+
+    public function seoStore(Request $request)
+    {
+        $technology = Technology::find($request['technology_id']);
+
+        if (isset($technology->meta_title)) {
+            $this->translateUpdate($technology->meta_title, $request['title']);
+        } else {
+            $title = $this->translateCreate($request['title']);
+            $technology->meta_title = $title->id;
+        }
+
+        if (isset($technology->meta_description)) {
+            $this->translateUpdate($technology->meta_description, $request['content']);
+        } else {
+            $desc = $this->translateCreate($request['content']);
+            $technology->meta_description = $desc->id;
+        }
+
+        $technology->save();
+
+        return redirect()->route('technology.index')->with('success', 'Успешно сохранилось SEO.');
+    }
+
+    protected function translateCreate($data)
+    {
+        return Translate::create([
+            'ru'    =>  $data['ru'],
+            'en'    =>  $data['en'],
+            'kz'    =>  $data['kz'],
+            'tr'    =>  $data['tr'],
+            'ch'    =>  $data['ch'],
+            'phr'    =>  $data['phr'],
+        ]);
+    }
+
+    protected function translateUpdate($id, $data)
+    {
+        Translate::find($id)->update([
+            'ru'    =>  $data['ru'],
+            'en'    =>  $data['en'],
+            'kz'    =>  $data['kz'],
+            'tr'    =>  $data['tr'],
+            'ch'    =>  $data['ch'],
+            'phr'    =>  $data['phr'],
+        ]);
     }
 }

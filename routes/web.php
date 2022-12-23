@@ -44,3 +44,15 @@ Route::resource('admin/technology', 'App\Http\Controllers\Backend\TechnologyCont
 Route::resource('admin/partner-blocks', 'App\Http\Controllers\Backend\PartnerBlockController');
 Route::resource('admin/partner', 'App\Http\Controllers\Backend\PartnerController'); //nakat
 Route::resource('admin/analytics', 'App\Http\Controllers\Backend\AnalyticsController');
+
+Route::get('admin/news-seo/{id}', [\App\Http\Controllers\Backend\NewsController::class, 'seo'])->name('news-seo');
+Route::post('admin/news-seo-store', [\App\Http\Controllers\Backend\NewsController::class, 'seoStore'])->name('news-seo-store');
+
+Route::get('admin/analytics-seo/{id}', [\App\Http\Controllers\Backend\AnalyticsController::class, 'seo'])->name('analytics-seo');
+Route::post('admin/analytics-seo-store', [\App\Http\Controllers\Backend\AnalyticsController::class, 'seoStore'])->name('analytics-seo-store');
+
+Route::get('admin/technologies-seo/{id}', [\App\Http\Controllers\Backend\TechnologyController::class, 'seo'])->name('technologies-seo');
+Route::post('admin/technologies-seo-store', [\App\Http\Controllers\Backend\TechnologyController::class, 'seoStore'])->name('technologies-seo-store');
+
+Route::get('admin/opinions-seo/{id}', [\App\Http\Controllers\Backend\OpinionController::class, 'seo'])->name('opinions-seo');
+Route::post('admin/opinions-seo-store', [\App\Http\Controllers\Backend\OpinionController::class, 'seoStore'])->name('opinions-seo-store');

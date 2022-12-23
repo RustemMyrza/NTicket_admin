@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\News;
 use File;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Analytics;
@@ -216,5 +217,58 @@ class AnalyticsController extends Controller
         $content->delete();
         $analytics->delete();
         return redirect('admin/analytics')->with('flash_message', 'Удален');
+    }
+
+    public function seo($id)
+    {
+        $analytics = Analytics::find($id);
+
+        return view('analytics.seo', compact('analytics'));
+    }
+
+    public function seoStore(Request $request)
+    {
+        $analytics = Analytics::find($request['analytics_id']);
+        if (isset($analytics->meta_title)) {
+            $this->translateUpdate($analytics->meta_title, $request['title']);
+        } else {
+            $title = $this->translateCreate($request['title']);
+            $analytics->meta_title = $title->id;
+        }
+
+        if (isset($analytics->meta_description)) {
+            $this->translateUpdate($analytics->meta_description, $request['content']);
+        } else {
+            $desc = $this->translateCreate($request['content']);
+            $analytics->meta_description = $desc->id;
+        }
+
+        $analytics->save();
+
+        return redirect()->route('analytics.index')->with('success', 'Успешно сохранилось SEO.');
+    }
+
+    protected function translateCreate($data)
+    {
+        return Translate::create([
+            'ru'    =>  $data['ru'],
+            'en'    =>  $data['en'],
+            'kz'    =>  $data['kz'],
+            'tr'    =>  $data['tr'],
+            'ch'    =>  $data['ch'],
+            'phr'    =>  $data['phr'],
+        ]);
+    }
+
+    protected function translateUpdate($id, $data)
+    {
+        Translate::find($id)->update([
+            'ru'    =>  $data['ru'],
+            'en'    =>  $data['en'],
+            'kz'    =>  $data['kz'],
+            'tr'    =>  $data['tr'],
+            'ch'    =>  $data['ch'],
+            'phr'    =>  $data['phr'],
+        ]);
     }
 }
