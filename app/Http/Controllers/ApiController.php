@@ -287,7 +287,13 @@ class ApiController extends Controller
             'id' => 'required|exists:news,id',
         ]);
         $lang = $request->lang;
-        $news = News::find($request['id']);
+        $news = News::query()
+            ->select(['news.*', 'metaTitle.' . $lang . ' as title', 'metaDesc.' . $lang . ' as content'])
+            ->leftJoin('translates as metaTitle', 'metaTitle.id', 'news.meta_title')
+            ->leftJoin('translates as metaDesc', 'metaDesc.id', 'news.meta_description')
+            ->where('news.id', $request->id)
+        ->get();
+
         $similars = News::join('translates as title', 'title.id', 'news.title')
             ->join('translates as content', 'content.id', 'news.content')
             ->join('translates as metaTitle', 'metaTitle.id', 'news.meta_title')
@@ -296,7 +302,7 @@ class ApiController extends Controller
                 'news.created_at', 'news.popular',
                 'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
             )
-            ->where('news.id', '!=', $news->id)
+            ->where('news.id', '!=', $news[0]->id)
             ->latest()->take(4)->get();
 
         $populars = News::join('translates as title', 'title.id', 'news.title')
@@ -313,7 +319,7 @@ class ApiController extends Controller
             ->get();
 
         return response()->json([
-            'data' => new NewsResource($news),
+            'data' => $news[0],
             'similars' => $similars,
             'populars' => $populars
         ]);
