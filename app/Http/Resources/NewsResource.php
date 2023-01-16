@@ -20,6 +20,8 @@ class NewsResource extends JsonResource
         return [
             'id'    =>  $this->id,
             'title' =>  Translate::where('id', $this->title)->value($lang),
+            'meta_title' => isset($this->meta_title) ? Translate::where('id', $this->meta_title)->value($lang) : null,
+            'meta_description' => isset($this->meta_description) ? Translate::where('id', $this->meta_description)->value($lang) : null,
             'content' =>  Translate::where('id', $this->content)->value($lang),
             'viewing'   =>  $this->viewing,
             'image' =>  $this->image,
