@@ -8,9 +8,11 @@
 
 @section('content')
 
-    <a href="{{ url('/admin/news') }}" title="Назад"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button></a>
-    <br />
-    <br />
+    <a href="{{ url('/admin/news') }}" title="Назад">
+        <button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
+    </a>
+    <br/>
+    <br/>
 
     @if ($errors->any())
         <ul class="alert alert-danger">
@@ -20,7 +22,8 @@
         </ul>
     @endif
 
-    <form method="POST" action="{{ url('/admin/news') }}" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+    <form method="POST" action="{{ url('/admin/news') }}" accept-charset="UTF-8" class="form-horizontal"
+          enctype="multipart/form-data">
         {{ csrf_field() }}
 
         @include ('news.form', ['formMode' => 'create'])
@@ -35,5 +38,6 @@
         CKEDITOR.replace('content_ch');
         CKEDITOR.replace('content_tr');
         CKEDITOR.replace('content_phr');
+
     </script>
 @endsection

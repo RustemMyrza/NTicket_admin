@@ -23,7 +23,7 @@
         <form method="POST" action="{{route('news-seo-store')}}" accept-charset="UTF-8"
               class="form-horizontal" enctype="multipart/form-data">
             {{ csrf_field() }}
-            
+
             <input type="hidden" name="news_id" value="{{$news->id}}">
 
             <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
@@ -184,6 +184,7 @@
 
 
 
+
     </script>
 @endsection
 
@@ -191,5 +192,6 @@
     <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('my-editor');
+
     </script>
 @endpush

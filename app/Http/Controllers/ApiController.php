@@ -232,7 +232,7 @@ class ApiController extends Controller
 //            )
 //            ->orderBy('created_at', 'desc')
 //            ->paginate(4);
-        $news = News::orderByDesc('created_at')->paginate(4);
+        $news = News::orderByDesc('created_at')->paginate(16);
 
 
         return response()->json([
@@ -279,7 +279,7 @@ class ApiController extends Controller
 //            )
 //            ->orderBy('technology.created_at', 'desc')
 //            ->paginate(4);
-        $technologies = Technology::orderByDesc('created_at')->paginate(4);
+        $technologies = Technology::orderByDesc('created_at')->paginate(16);
 
         return response()->json([
             'data' =>  new ResourcePaginator(TechnologyResource::collection($technologies)),
@@ -435,7 +435,7 @@ class ApiController extends Controller
                 'content.' . $lang . ' as content', 'opinion.created_at',
                 'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
             )
-            ->paginate(4);
+            ->paginate(16);
 
         return response()->json([
             'data' => $opinions,

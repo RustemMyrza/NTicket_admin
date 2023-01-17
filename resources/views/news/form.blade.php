@@ -132,9 +132,9 @@
 <div class="form-group {{ $errors->has('popular') ? 'has-error' : ''}}">
     <label for="popular" class="control-label">{{ 'Популярный' }}</label>
     <input class="form-control" name="popular" type="checkbox" id="popular"
-          @if($news->popular == true)
-              checked
-              @endif
+           @if($news->popular == true)
+           checked
+            @endif
 
     >
 </div>
