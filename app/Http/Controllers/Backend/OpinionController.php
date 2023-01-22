@@ -87,7 +87,7 @@ class OpinionController extends Controller
         $opinion->content = $content->id;
         $opinion->viewing = $requestData['viewing'];
         $opinion->image = $requestData['image'];
-        $opinion->video = $requestData['video'];
+//        $opinion->video = $requestData['video'];
         $opinion->save();
 
         return redirect('admin/opinion')->with('flash_message', 'Добавлен');

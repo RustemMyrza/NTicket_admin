@@ -142,17 +142,17 @@
 @endif
 
 
-<div class="form-group col-md-6 {{ $errors->has('video') ? 'has-error' : ''}}">
-    <label for="video" class="control-label">{{ 'Видео' }}</label>
-    <input class="form-control" name="video" type="file" id="video"
-           value="{{ isset($opinion->video) ? $opinion->video : ''}}">
-    {!! $errors->first('video', '<p class="help-block">:message</p>') !!}
-    @if(isset($opinion->video))
-        <video controls width="400" height="300">
-            <source src="{{ \Config::get('constants.alias.cdn_url').$opinion->video}}" type="video/mp4">
-        </video>
-    @endif
-</div>
+{{--<div class="form-group col-md-6 {{ $errors->has('video') ? 'has-error' : ''}}">--}}
+{{--    <label for="video" class="control-label">{{ 'Видео' }}</label>--}}
+{{--    <input class="form-control" name="video" type="file" id="video"--}}
+{{--           value="{{ isset($opinion->video) ? $opinion->video : ''}}">--}}
+{{--    {!! $errors->first('video', '<p class="help-block">:message</p>') !!}--}}
+{{--    @if(isset($opinion->video))--}}
+{{--        <video controls width="400" height="300">--}}
+{{--            <source src="{{ \Config::get('constants.alias.cdn_url').$opinion->video}}" type="video/mp4">--}}
+{{--        </video>--}}
+{{--    @endif--}}
+{{--</div>--}}
 
 
 <div class="form-group">

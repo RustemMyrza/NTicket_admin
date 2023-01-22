@@ -199,17 +199,22 @@ class ApiController extends Controller
             'lang' => 'required',
         ]);
         $lang = $request->lang;
-//        $news = News::join('translates as title', 'title.id', 'news.title')
-//            ->join('translates as content', 'content.id', 'news.content')
-//            ->join('translates as metaTitle', 'metaTitle.id', 'news.meta_title')
-//            ->join('translates as metaDescription', 'metaDescription.id', 'news.meta_description')
-//            ->select('news.id', 'news.viewing', 'news.image', 'news.video', 'news.link', 'news.popular',
-//                'news.created_at', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content',
-//                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
-//            )
-//            ->orderBy('created_at', 'desc')
-//            ->paginate(20);
+
         $news = News::orderByDesc('created_at')->paginate(20);
+
+        return response()->json([
+            'data' => new ResourcePaginator(NewsResource::collection($news)),
+        ]);
+    }
+
+    public function mainNews(Request $request)
+    {
+        $request->validate([
+            'lang' => 'required',
+        ]);
+        $lang = $request->lang;
+
+        $news = News::orderByDesc('created_at')->paginate(4);
 
         return response()->json([
             'data' => new ResourcePaginator(NewsResource::collection($news)),

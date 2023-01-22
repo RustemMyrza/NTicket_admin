@@ -28,6 +28,7 @@ Route::get('/contacts', [App\Http\Controllers\ApiController::class, 'contacts'])
 Route::post('/feedback', [App\Http\Controllers\ApiController::class, 'feedback'])->name('feedback');
 Route::get('/partners', [\App\Http\Controllers\ApiController::class, 'partners']);
 Route::get('/news', [\App\Http\Controllers\ApiController::class, 'news']);
+Route::get('/main-news', [\App\Http\Controllers\ApiController::class, 'mainNews']);
 Route::get('/news-mobile', [\App\Http\Controllers\ApiController::class, 'newsMobile']);
 Route::get('/technologies', [\App\Http\Controllers\ApiController::class, 'technologies']);
 Route::get('/technologies-mobile', [\App\Http\Controllers\ApiController::class, 'technologiesMobile']);
