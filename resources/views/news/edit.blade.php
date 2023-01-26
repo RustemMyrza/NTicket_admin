@@ -32,14 +32,12 @@
     </div>
     <script src="/ckeditor/ckeditor.js"></script>
     <script>
-        CKEDITOR.replace('content_en');
         CKEDITOR.replace('content_kz');
+        CKEDITOR.replace('content_en');
         CKEDITOR.replace('content_ru');
         CKEDITOR.replace('content_ch');
         CKEDITOR.replace('content_tr');
         CKEDITOR.replace('content_phr');
-
-
     </script>
 @endsection
 
@@ -47,7 +45,5 @@
     <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('my-editor');
-
-
     </script>
 @endpush
