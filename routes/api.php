@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Parsing\ParsingApi;
+use App\Http\Controllers\ParsingDataTypeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,5 +46,9 @@ Route::get('/opinion-by-id', [ApiController::class, 'opinionById']);
 
 Route::get('/search', [ApiController::class, 'search']);
 
-Route::post('/parsing/store', [ParsingApi::class, 'updateParsingData']);
-Route::get('/parsing/data', [ParsingApi::class, 'getParsingData']);
+Route::prefix('v1')->group(function (): void {
+    Route::prefix('/parsing')->group(function (): void {
+        Route::post('/{type}', [ParsingDataTypeController::class, 'store']);
+        Route::get('/{type}', [ParsingDataTypeController::class, 'index']);
+    });
+});

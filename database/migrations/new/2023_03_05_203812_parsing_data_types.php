@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ParsingDataMonths extends Migration
+class ParsingDataTypes extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,13 @@ class ParsingDataMonths extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('parsing_data_types', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('title', 512);
+            $table->longText('months');
+            $table->string('type');
+            $table->timestamps();
+        });
     }
 
     /**
