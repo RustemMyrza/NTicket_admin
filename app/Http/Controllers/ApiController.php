@@ -498,8 +498,8 @@ class ApiController extends Controller
             ->join('translates as p_description', 'p_description.id', 'news.content')
             ->where('p_title.' . $lang, 'LIKE', '%' . $keyword . '%')
             ->orWhere('p_description.' . $lang, 'LIKE', '%' . $keyword . '%')
-            ->select('news.id', 'p_title.' . $lang . ' as title', 'p_description.' . $lang . ' as content')
-            ->orderBy('title', 'ASC')
+            ->select('news.id', 'p_title.' . $lang . ' as title', 'p_description.' . $lang . ' as content', 'news.created_at', 'news.image')
+            ->orderBy('news.created_at', 'desc')
             ->paginate(12);
 
         return response()->json([
