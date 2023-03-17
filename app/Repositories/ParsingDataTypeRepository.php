@@ -13,6 +13,18 @@ class ParsingDataTypeRepository
         $this->model = $model;
     }
 
+    public function index(string $type)
+    {
+        try {
+            return $this->model->query()
+                ->where('type', $type)
+                ->get();
+        } catch (\Exception $exception) {
+            $responseData = $exception->getMessage();
+            throw new \Exception($responseData);
+        }
+    }
+
     /**
      * @param array $values
      * @return mixed
