@@ -24,9 +24,17 @@ class ParsingDataTypeService
      */
     public function getParsingData(array $data, string $type)
     {
+
         if (self::type($type)) {
-            return $this->repository->index($type);
+            $collect = $this->repository->index($type);
+            return $collect;
         }
+
+
+
+//        if ($collect) {
+//            return $collect->map(function ());
+//        }
 
         throw new Exception('undefined type');
     }

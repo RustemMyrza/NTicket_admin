@@ -23,10 +23,8 @@ class ParsingDataTypeController extends Controller
      */
     public function index(Request $request, $type): JsonResponse
     {
-        $requestData = $request->validated();
-
         try {
-            return $this->response(200, $this->service->getParsingData($requestData, $type));
+            return $this->response(200, $this->service->getParsingData($request->all(), $type));
         } catch (\Exception $e) {
             return $this->response(500, [], $e->getMessage());
         }
