@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Repositories\ParsingDataTypeRepository;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class ParsingDataTypeService
 {
@@ -12,6 +14,29 @@ class ParsingDataTypeService
     public function __construct(ParsingDataTypeRepository $repository)
     {
         $this->repository = $repository;
+    }
+
+    /**
+     * @param array $data
+     * @param string $type
+     * @return Builder[]|Collection
+     * @throws Exception
+     */
+    public function getParsingData(array $data, string $type)
+    {
+
+        if (self::type($type)) {
+            $collect = $this->repository->index($type);
+            return $collect;
+        }
+
+
+
+//        if ($collect) {
+//            return $collect->map(function ());
+//        }
+
+        throw new Exception('undefined type');
     }
 
     /**
