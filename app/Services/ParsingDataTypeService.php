@@ -143,6 +143,10 @@ class ParsingDataTypeService
 
                 foreach (json_decode($item['months']) as $month) {
 
+                    if (empty($month->table_data)) {
+                        return $data;
+                    }
+
                     foreach ($month->table_titles as $titleKey => $tableTitle) {
 
                         if ($tableTitle == 'Производство (1000 МТ)') {
