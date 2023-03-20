@@ -248,6 +248,25 @@ class ParsingDataTypeService
         }
     }
 
+    public function getParsingDataTable(string $type)
+    {
+        if (self::type($type)) {
+            return $this->mapParsDataTable($this->repository->index($type));
+        }
+
+        throw new Exception('undefined type');
+    }
+
+    public function mapParsDataTable(Collection $collection)
+    {
+        return $collection->map(function ($item) {
+            return [
+                'title' => $item['title'],
+                'table' => json_decode($item['months'], true)
+            ];
+        });
+    }
+
     /**
      * @param array $data
      * @param string $type

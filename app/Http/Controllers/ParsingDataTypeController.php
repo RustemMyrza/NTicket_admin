@@ -31,6 +31,15 @@ class ParsingDataTypeController extends Controller
         }
     }
 
+    public function table($type): JsonResponse
+    {
+        try {
+            return $this->response(200, $this->service->getParsingDataTable($type));
+        } catch (\Exception $e) {
+            return $this->response(500, [], $e->getMessage());
+        }
+    }
+
     /**
      * @param ParsingDataTypeFormRequest $request
      * @param $type
