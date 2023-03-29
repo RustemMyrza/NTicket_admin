@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AnalyticsResource;
 use App\Http\Resources\NewsResource;
 use App\Http\Resources\ContactsResource;
+use App\Http\Resources\OpinionResource;
 use App\Http\Resources\PartnerBlockResource;
 use App\Http\Resources\PartnerResource;
 use App\Http\Resources\ServiceResource;
@@ -59,7 +60,7 @@ class ApiController extends Controller
             ->join('translates as metaDescription', 'metaDescription.id', 'news.meta_description')
             ->select('news.id', 'news.image', 'news.viewing', 'title.' . $lang . ' as title',
                 'content.' . $lang . ' as content', 'news.created_at', 'news.video', 'news.link', 'news.popular',
-                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+                'metaTitle.' . $lang . ' as meta_title', 'metaDescription.' . $lang . ' as meta_description',
             )
             ->orderBy('news.created_at', 'desc')
             ->get();
@@ -70,7 +71,7 @@ class ApiController extends Controller
             ->join('translates as metaDescription', 'metaDescription.id', 'technology.meta_description')
             ->select('technology.id', 'technology.image', 'technology.viewing',
                 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'technology.created_at',
-                'technology.video', 'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+                'technology.video', 'metaTitle.' . $lang . ' as meta_title', 'metaDescription.' . $lang . ' as meta_description',
             )
             ->orderBy('technology.created_at', 'desc')
             ->get();
@@ -264,7 +265,7 @@ class ApiController extends Controller
         $technologies = Technology::orderByDesc('created_at')->paginate(20);
 
         return response()->json([
-            'data' =>  new ResourcePaginator(TechnologyResource::collection($technologies)),
+            'data' => new ResourcePaginator(TechnologyResource::collection($technologies)),
         ]);
     }
 
@@ -287,7 +288,7 @@ class ApiController extends Controller
         $technologies = Technology::orderByDesc('created_at')->paginate(16);
 
         return response()->json([
-            'data' =>  new ResourcePaginator(TechnologyResource::collection($technologies)),
+            'data' => new ResourcePaginator(TechnologyResource::collection($technologies)),
         ]);
     }
 
@@ -312,7 +313,7 @@ class ApiController extends Controller
             ->join('translates as metaDescription', 'metaDescription.id', 'news.meta_description')
             ->select('news.id', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'news.image',
                 'news.created_at', 'news.popular',
-                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+                'metaTitle.' . $lang . ' as meta_title', 'metaDescription.' . $lang . ' as meta_description',
             )
             ->where('news.id', '!=', $news->id)
             ->latest()->take(4)->get();
@@ -323,7 +324,7 @@ class ApiController extends Controller
             ->join('translates as metaDescription', 'metaDescription.id', 'news.meta_description')
             ->select('news.id', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content',
                 'news.image', 'news.created_at', 'news.viewing', 'news.popular',
-                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+                'metaTitle.' . $lang . ' as meta_title', 'metaDescription.' . $lang . ' as meta_description',
             )
             ->where('news.popular', true)
             ->orderBy('news.viewing', 'desc')
@@ -344,14 +345,16 @@ class ApiController extends Controller
             'id' => 'required|exists:analytics,id',
         ]);
         $lang = $request->lang;
+
         $analytics = Analytics::find($request['id']);
+
         $similars = Analytics::join('translates as title', 'title.id', 'analytics.title')
             ->join('translates as content', 'content.id', 'analytics.content')
             ->join('translates as metaTitle', 'metaTitle.id', 'analytics.meta_title')
             ->join('translates as metaDescription', 'metaDescription.id', 'analytics.meta_description')
             ->select('analytics.id', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'analytics.image',
                 'analytics.created_at',
-                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+                'metaTitle.' . $lang . ' as meta_title', 'metaDescription.' . $lang . ' as meta_description',
             )
             ->where('analytics.id', '!=', $analytics->id)
             ->latest()->take(4)->get();
@@ -410,20 +413,25 @@ class ApiController extends Controller
         $request->validate([
             'lang' => 'required',
         ]);
-        $lang = $request->lang;
-        $opinions = Opinion::join('translates as title', 'title.id', 'opinion.title')
-            ->join('translates as content', 'content.id', 'opinion.content')
-            ->join('translates as metaTitle', 'metaTitle.id', 'opinion.meta_title')
-            ->join('translates as metaDescription', 'metaDescription.id', 'opinion.meta_description')
-            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title',
-                'content.' . $lang . ' as content', 'opinion.created_at',
-                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
-            )
-            ->orderBy('opinion.created_at', 'desc')
+
+//        $lang = $request->lang;
+//        $opinions = Opinion::join('translates as title', 'title.id', 'opinion.title')
+//            ->join('translates as content', 'content.id', 'opinion.content')
+//            ->join('translates as metaTitle', 'metaTitle.id', 'opinion.meta_title')
+//            ->join('translates as metaDescription', 'metaDescription.id', 'opinion.meta_description')
+//            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title',
+//                'content.' . $lang . ' as content', 'opinion.created_at',
+//                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+//            )
+//            ->orderBy('opinion.created_at', 'desc')
+//            ->paginate(20);
+
+        $opinions = Opinion::orderByDesc('created_at')
             ->paginate(20);
 
+
         return response()->json([
-            'data' => $opinions,
+            'data' => new ResourcePaginator(OpinionResource::collection($opinions)),
         ]);
     }
 
@@ -432,19 +440,23 @@ class ApiController extends Controller
         $request->validate([
             'lang' => 'required',
         ]);
-        $lang = $request->lang;
-        $opinions = Opinion::join('translates as title', 'title.id', 'opinion.title')
-            ->join('translates as content', 'content.id', 'opinion.content')
-            ->join('translates as metaTitle', 'metaTitle.id', 'opinion.meta_title')
-            ->join('translates as metaDescription', 'metaDescription.id', 'opinion.meta_description')
-            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title',
-                'content.' . $lang . ' as content', 'opinion.created_at',
-                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
-            )
+
+//        $lang = $request->lang;
+//        $opinions = Opinion::join('translates as title', 'title.id', 'opinion.title')
+//            ->join('translates as content', 'content.id', 'opinion.content')
+//            ->join('translates as metaTitle', 'metaTitle.id', 'opinion.meta_title')
+//            ->join('translates as metaDescription', 'metaDescription.id', 'opinion.meta_description')
+//            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title',
+//                'content.' . $lang . ' as content', 'opinion.created_at',
+//                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+//            )
+//            ->paginate(16);
+
+        $opinions = Opinion::orderByDesc('created_at')
             ->paginate(16);
 
         return response()->json([
-            'data' => $opinions,
+            'data' => new ResourcePaginator(OpinionResource::collection($opinions)),
         ]);
     }
 
@@ -455,17 +467,19 @@ class ApiController extends Controller
             'id' => 'required|exists:opinion,id',
         ]);
         $lang = $request->lang;
-//        $opinion = Opinion::find($request['id']);
-        $opinion = Opinion::join('translates as title', 'title.id', 'opinion.title')
-            ->join('translates as content', 'content.id', 'opinion.content')
-            ->join('translates as metaTitle', 'metaTitle.id', 'opinion.meta_title')
-            ->join('translates as metaDescription', 'metaDescription.id', 'opinion.meta_description')
-            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title',
-                'content.' . $lang . ' as content', 'opinion.created_at',
-                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
-            )
-            ->where('opinion.id', $request['id'])
-            ->first();
+
+        $opinion = Opinion::find($request['id']);
+
+//        $opinion = Opinion::join('translates as title', 'title.id', 'opinion.title')
+//            ->join('translates as content', 'content.id', 'opinion.content')
+//            ->join('translates as metaTitle', 'metaTitle.id', 'opinion.meta_title')
+//            ->join('translates as metaDescription', 'metaDescription.id', 'opinion.meta_description')
+//            ->select('opinion.id', 'opinion.image', 'opinion.viewing', 'title.' . $lang . ' as title',
+//                'content.' . $lang . ' as content', 'opinion.created_at',
+//                'metaTitle.' . $lang . ' as meta_title', 'metaDescription.' . $lang . ' as meta_description',
+//            )
+//            ->where('opinion.id', $request['id'])
+//            ->first();
 
         $similars = Opinion::join('translates as title', 'title.id', 'opinion.title')
             ->join('translates as content', 'content.id', 'opinion.content')
@@ -473,17 +487,16 @@ class ApiController extends Controller
             ->join('translates as metaDescription', 'metaDescription.id', 'opinion.meta_description')
             ->select('opinion.id', 'title.' . $lang . ' as title', 'content.' . $lang . ' as content', 'opinion.image',
                 'opinion.created_at',
-                'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
+                'metaTitle.' . $lang . ' as meta_title', 'metaDescription.' . $lang . ' as meta_description',
             )
             ->where('opinion.id', '!=', $opinion->id)
             ->latest()
             ->take(3)
             ->get();
 
-
         return response()->json([
-            'data' => $opinion,
-            'similars'  =>  $similars,
+            'data' => new OpinionResource($opinion),
+            'similars' => $similars,
         ]);
     }
 
