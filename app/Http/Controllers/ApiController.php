@@ -419,6 +419,7 @@ class ApiController extends Controller
                 'content.' . $lang . ' as content', 'opinion.created_at',
                 'metaTitle.'. $lang . ' as meta_title', 'metaDescription.'. $lang . ' as meta_description',
             )
+            ->orderBy('opinion.created_at', 'desc')
             ->paginate(20);
 
         return response()->json([
