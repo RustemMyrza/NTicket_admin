@@ -317,7 +317,7 @@ class ParsingDataTypeService
      */
     public function type(string $data): bool
     {
-        if ($data == 'kz' || $data == 'all') {
+        if (!empty($data)) {
             return true;
         }
 
