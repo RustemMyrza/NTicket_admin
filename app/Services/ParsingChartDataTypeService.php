@@ -17,6 +17,17 @@ class ParsingChartDataTypeService
         $this->repository = $repository;
     }
 
+    /**
+     * @throws Exception
+     */
+    public function getParsingDataTable(string $type)
+    {
+        if (self::type($type)) {
+            return $this->mapParsDataTable($this->repository->index($type));
+        }
+
+        throw new Exception('undefined type');
+    }
 
     /**
      * @param Collection $collection
@@ -27,7 +38,7 @@ class ParsingChartDataTypeService
         return $collection->map(function ($item) {
             return [
                 'title' => $item['title'],
-                'table' => json_decode($item['months'], true)
+                'chart' => json_decode($item['months'], true)
             ];
         });
     }
