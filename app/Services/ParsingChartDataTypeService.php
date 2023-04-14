@@ -19,19 +19,6 @@ class ParsingChartDataTypeService
 
 
     /**
-     * @throws Exception
-     */
-    public function getParsingDataTable(string $type)
-    {
-        if (self::type($type)) {
-            return $this->mapParsDataTable($this->repository->index($type));
-        }
-
-        throw new Exception('undefined type');
-    }
-
-
-    /**
      * @param Collection $collection
      * @return Collection|\Illuminate\Support\Collection
      */
@@ -71,7 +58,7 @@ class ParsingChartDataTypeService
      */
     public function type(string $data): bool
     {
-        if ($data == 'kz' || $data == 'all') {
+        if (!empty($data)) {
             return true;
         }
 
