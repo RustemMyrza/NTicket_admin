@@ -294,6 +294,23 @@ class ParsingDataTypeService
         throw new Exception('undefined type');
     }
 
+    public function addParsingChartData(array $data, string $type): bool
+    {
+        if (self::type($type)) {
+            foreach ($data as $item) {
+                $this->repository->create([
+                    'title' => $item['title'],
+                    'months' => json_encode($item['months']),
+                    'type' => $type
+                ]);
+            }
+
+            return true;
+        }
+
+        throw new Exception('undefined type');
+    }
+
     /**
      * @param string $data
      * @return bool

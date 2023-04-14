@@ -51,5 +51,6 @@ Route::prefix('v1')->group(function (): void {
         Route::post('/{type}', [ParsingDataTypeController::class, 'store']);
         Route::get('/{type}', [ParsingDataTypeController::class, 'index']);
         Route::get('/table/{type}', [ParsingDataTypeController::class, 'table']);
+        Route::post('/chart/{type}', [ParsingDataTypeController::class, 'chartStore']);
     });
 });

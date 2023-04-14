@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ParsingDataIndexFormRequest;
 use App\Http\Requests\ParsingDataTypeFormRequest;
+use App\Services\ParsingChartDataTypeService;
 use App\Services\ParsingDataTypeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,10 +12,12 @@ use Illuminate\Http\Request;
 class ParsingDataTypeController extends Controller
 {
     private ParsingDataTypeService $service;
+    private ParsingChartDataTypeService $chartService;
 
-    public function __construct(ParsingDataTypeService $service)
+    public function __construct(ParsingDataTypeService $service, ParsingChartDataTypeService $chartService)
     {
         $this->service = $service;
+        $this->chartService = $chartService;
     }
 
     /**
@@ -51,6 +54,17 @@ class ParsingDataTypeController extends Controller
 
         try {
             return $this->response(200, $this->service->addParsingData($requestData, $type));
+        } catch (\Exception $e) {
+            return $this->response(500, [], $e->getMessage());
+        }
+    }
+
+    public function chartStore(ParsingDataTypeFormRequest $request, $type): JsonResponse
+    {
+        $requestData = $request->validated();
+
+        try {
+            return $this->response(200, $this->chartService->addParsingChartData($requestData, $type));
         } catch (\Exception $e) {
             return $this->response(500, [], $e->getMessage());
         }
