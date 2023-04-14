@@ -69,4 +69,13 @@ class ParsingDataTypeController extends Controller
             return $this->response(500, [], $e->getMessage());
         }
     }
+
+    public function chart($type): JsonResponse
+    {
+        try {
+            return $this->response(200, $this->chartService->getParsingDataTable($type));
+        } catch (\Exception $e) {
+            return $this->response(500, [], $e->getMessage());
+        }
+    }
 }
