@@ -29,6 +29,21 @@ class ParsingChartDataTypeRepository
     }
 
     /**
+     * @throws \Exception
+     */
+    public function getAllTypes()
+    {
+        try {
+            return $this->model->query()
+                ->distinct()
+                ->get(['type']);
+        } catch (\Exception $exception) {
+            $responseData = $exception->getMessage();
+            throw new \Exception($responseData);
+        }
+    }
+
+    /**
      * @param array $values
      * @return mixed
      * @throws \Exception

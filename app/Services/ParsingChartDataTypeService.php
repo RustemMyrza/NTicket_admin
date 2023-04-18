@@ -6,6 +6,7 @@ use App\Repositories\ParsingChartDataTypeRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Lang;
 use function PHPUnit\Framework\isEmpty;
 
 class ParsingChartDataTypeService
@@ -29,6 +30,16 @@ class ParsingChartDataTypeService
         throw new Exception('undefined type');
     }
 
+
+    /**
+     * @throws Exception
+     */
+    public function getCountriesDataTable()
+    {
+        return $this->mapParsCountriesDataTable($this->repository->getAllTypes());
+    }
+
+
     /**
      * @param Collection $collection
      * @return Collection|\Illuminate\Support\Collection
@@ -41,6 +52,24 @@ class ParsingChartDataTypeService
                 'chart' => json_decode($item['months'], true)
             ];
         });
+    }
+
+    public function mapParsCountriesDataTable(Collection $collection)
+    {
+        return $collection->map(function ($item) {
+            return [
+                'label' => $this->getCountryNameByType($item['type']),
+                'value' => $item['type']
+            ];
+        });
+    }
+
+    public function getCountryNameByType(string $type)
+    {
+        if (Lang::has('countries.' . $type)) {
+            return Lang::get('countries.' . $type, [], 'ru');
+        }
+        return 'Страна не найдено';
     }
 
     /**
