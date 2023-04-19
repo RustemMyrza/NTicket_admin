@@ -229,7 +229,7 @@ class ParsingChartDataTypeService
                                 foreach ($month->piechart as $titleDataKey => $tableData) {
                                     $data[$titleDataKey] = [
                                         'country' => $tableData->goods,
-                                        'visits' => $tableData->s,
+                                        'litres' => $tableData->s,
                                     ];
                                 }
                             }
@@ -238,7 +238,7 @@ class ParsingChartDataTypeService
                                 foreach ($month->barchart as $titleDataKey => $tableData) {
                                     $data[$titleDataKey] = [
                                         'country' => $tableData->c,
-                                        'litres' => $tableData->v,
+                                        'visits' => $tableData->v,
                                     ];
                                 }
                             }
