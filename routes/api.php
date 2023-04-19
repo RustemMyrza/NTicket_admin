@@ -49,11 +49,14 @@ Route::get('/search', [ApiController::class, 'search']);
 Route::prefix('v1')->group(function (): void {
     Route::prefix('/parsing')->group(function (): void {
         Route::post('/{type}', [ParsingDataTypeController::class, 'store']);
+
         Route::get('/{type}', [ParsingDataTypeController::class, 'index']);
+
         Route::get('/table/{type}', [ParsingDataTypeController::class, 'table']);
         Route::post('/chart/{type}', [ParsingDataTypeController::class, 'chartStore']);
         Route::get('/chart/{type}', [ParsingDataTypeController::class, 'chart']);
 
+        Route::get('/type-chart/{type}', [ParsingDataTypeController::class, 'typeChart']);
         Route::get('/countries/all', [ParsingDataTypeController::class, 'countries']);
     });
 });
