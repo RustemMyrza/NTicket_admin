@@ -33,6 +33,43 @@ class ParsingDataTypeService
     }
 
     /**
+     * @param array $data
+     * @param string $type
+     * @return Builder[]|Collection
+     * @throws Exception
+     */
+    public function getNewParsingData(array $data, string $type)
+    {
+        if (self::type($type)) {
+            if (count($this->repository->index($type))) {
+                return $this->mapNewParsData($this->repository->index($type), $data);
+            }
+            return [];
+        }
+
+        throw new Exception('undefined type');
+    }
+
+    /**
+     * @param Collection $collection
+     * @param array $data
+     * @return array|Collection|\Illuminate\Support\Collection
+     * @throws Exception
+     */
+    public function mapNewParsData(Collection $collection, array $data)
+    {
+        if (isset($data['title']) && !empty($data['title'])) {
+            if (isset($data['month']) && !empty($data['month'])) {
+                $getTitle = $this->getNewTitleMonthData($collection, $data['title'], $data['month']);
+
+                return $getTitle ?? [];
+            }
+        }
+        return [];
+    }
+
+
+    /**
      * @param Collection $collection
      * @param array $data
      * @return array|Collection|\Illuminate\Support\Collection
@@ -41,9 +78,7 @@ class ParsingDataTypeService
     public function mapParsData(Collection $collection, array $data)
     {
         if (isset($data['title']) && !empty($data['title'])) {
-
             if (isset($data['month']) && !empty($data['month'])) {
-
                 $getTitle = $this->getTitleMonthData($collection, $data['title'], $data['month']);
 
                 if ($getTitle) {
@@ -51,11 +86,9 @@ class ParsingDataTypeService
                 } else {
                     throw new Exception('month не найден', 500);
                 }
-
             }
 
             return $this->getTitleMonth($collection, $data['title']);
-
         } else {
             return $this->getTitle($collection);
         }
@@ -198,7 +231,6 @@ class ParsingDataTypeService
         $data = [];
 
         try {
-
             $collection = $collection->where('title', $titleData);
 
             if (empty($collection->toArray())) {
@@ -206,24 +238,16 @@ class ParsingDataTypeService
             }
 
             $collection->map(function ($item) use (&$data, $monthData) {
-
-
-
                 foreach (json_decode($item['months']) as $month) {
-
                     if ($monthData == $month->title) {
-
                         foreach ($month->table_titles as $titleKey => $tableTitle) {
-
                             if ($titleKey == 0) {
                                 continue;
                             }
-
                             $dataKey[$titleKey] = $tableTitle;
                         }
 
                         foreach ($month->table_data as $titleDataKey => $tableData) {
-
                             if (empty($tableData) || count($tableData) < 14) {
                                 continue;
                             }
@@ -231,9 +255,62 @@ class ParsingDataTypeService
                             $data[$titleDataKey]['parent_title'] = $tableData[0];
 
                             foreach ($tableData as $ttKey => $tableDatum) {
-
                                 if ($ttKey > 0) {
+                                    $data[$titleDataKey]['items'][] = [
+                                        'title' => $dataKey[$ttKey],
+                                        'value' => $tableDatum,
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            })->toArray();
 
+            return array_values($data);
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @param Collection $collection
+     * @param string $titleData
+     * @param string $monthData
+     * @return array
+     * @throws Exception
+     */
+    public function getNewTitleMonthData(Collection $collection, string $titleData, string $monthData): array
+    {
+        $data = [];
+
+        try {
+            $collection = $collection->where('title', $titleData);
+
+            if (empty($collection->toArray())) {
+                return [];
+            }
+
+            $collection->map(function ($item) use (&$data, $monthData) {
+                foreach (json_decode($item['months']) as $month) {
+                    if ($monthData == $month->title) {
+                        foreach ($month->table_titles as $titleKey => $tableTitle) {
+                            if ($titleKey == 0) {
+                                continue;
+                            }
+                            $dataKey[$titleKey] = $tableTitle;
+                        }
+
+                        foreach ($month->table_data as $titleDataKey => $tableData) {
+                            if (empty($tableData) || count($tableData) < 14) {
+                                continue;
+                            }
+
+                            $data[$titleDataKey]['parent_title'] = $tableData[0];
+
+                            foreach ($tableData as $ttKey => $tableDatum) {
+                                if ($ttKey > 0) {
                                     $data[$titleDataKey]['items'][] = [
                                         'title' => $dataKey[$ttKey],
                                         'value' => $tableDatum,
