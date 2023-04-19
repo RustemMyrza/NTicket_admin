@@ -30,7 +30,6 @@ class ParsingChartDataTypeService
         throw new Exception('undefined type');
     }
 
-
     /**
      * @throws Exception
      */
@@ -38,7 +37,6 @@ class ParsingChartDataTypeService
     {
         return $this->mapParsCountriesDataTable($this->repository->getAllTypes());
     }
-
 
     /**
      * @param Collection $collection
@@ -103,5 +101,265 @@ class ParsingChartDataTypeService
         }
 
         return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getParsingPieChartDataTable(array $data, string $type)
+    {
+        if (self::type($type)) {
+            return $this->mapPieChartParsData($this->repository->index($type), $data, 'piechart');
+        }
+
+        throw new Exception('undefined type');
+    }
+
+    /**
+     * @param Collection $collection
+     * @param array $data
+     * @return array|Collection|\Illuminate\Support\Collection
+     * @throws Exception
+     */
+    public function mapPieChartParsData(Collection $collection, array $data, string $chart)
+    {
+        if (isset($data['title']) && !empty($data['title'])) {
+            if (isset($data['month']) && !empty($data['month'])) {
+                $getTitle = $this->getTitleMonthData($collection, $data['title'], $data['month'], $chart);
+
+                if ($getTitle) {
+                    return $getTitle;
+                } else {
+                    throw new Exception('month не найден', 500);
+                }
+            }
+            return $this->getTitleMonth($collection, $data['title']);
+        } else {
+            return $this->getTitle($collection);
+        }
+    }
+
+    /**
+     * @param Collection $collection
+     * @param string $titleData
+     * @return array
+     * @throws Exception
+     */
+    public function getTitleMonth(Collection $collection, string $titleData): array
+    {
+        $data = [];
+        try {
+            $collection = $collection->where('title', $titleData);
+
+            if (empty($collection->toArray())) {
+                throw new Exception('title не найден', 500);
+            }
+
+            $collection->map(function ($item) use (&$data) {
+                $chartKey = '';
+                $toChart = null;
+
+                foreach (json_decode($item['months']) as $month) {
+
+                    if (empty($month->table_data)) {
+                        return $data;
+                    }
+
+                    foreach ($month->table_titles as $titleKey => $tableTitle) {
+
+                        if ($tableTitle == 'Производство (1000 МТ)') {
+                            $chartKey = $titleKey;
+                        }
+                    }
+
+                    foreach ($month->table_data as $titleDataKey => $tableData) {
+
+                        if (empty($tableData) || count($tableData) < 14) {
+                            continue;
+                        }
+
+                        if (!empty($chartKey)) {
+
+                            if ($titleDataKey == 0) {
+                                $toChart = $tableData[$chartKey];
+
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    $data[] = [
+                        'title' => $month->title,
+                        'value' => $toChart
+                    ];
+                }
+
+            });
+
+            return $data;
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @param Collection $collection
+     * @param string $titleData
+     * @param string $monthData
+     * @return array
+     * @throws Exception
+     */
+    public function getTitleMonthData(Collection $collection, string $titleData, string $monthData, string $chart): array
+    {
+        $data = [];
+
+        try {
+            $collection = $collection->where('title', $titleData);
+
+            if (empty($collection->toArray())) {
+                throw new Exception('title не найден', 500);
+            }
+
+            $collection->map(function ($item) use (&$data, $monthData, $chart) {
+                foreach (json_decode($item['months']) as $month) {
+
+                    if ($monthData == $month->title) {
+
+                        if ($chart == 'piechart'){
+//                            foreach ($month->piechart as $titleKey => $tableTitle) {
+//                                if ($titleKey == 0) {
+//                                    continue;
+//                                }
+//                                $dataKey[$titleKey] = $tableTitle;
+//                            }
+
+                            foreach ($month->piechart as $titleDataKey => $tableData) {
+                                $data[$titleDataKey] = [
+                                    'country' => $tableData->goods,
+                                    'visits' => $tableData->s,
+                                ];
+                            }
+                        }else {
+//                            foreach ($month->barchart as $titleKey => $tableTitle) {
+//                                if ($titleKey == 0) {
+//                                    continue;
+//                                }
+//                                $dataKey[$titleKey] = $tableTitle;
+//                            }
+
+                            foreach ($month->barchart as $titleDataKey => $tableData) {
+                                $data[$titleDataKey] = [
+                                    'country' => $tableData->c,
+                                    'litres' => $tableData->v,
+                                ];
+                            }
+                        }
+
+                    }
+
+                }
+            })->toArray();
+
+            return array_values($data);
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @param Collection $collection
+     * @return Collection|\Illuminate\Support\Collection
+     * @throws Exception
+     */
+    public function getTitle(Collection $collection)
+    {
+        try {
+
+            return $collection->map(function ($item) {
+
+                $toChart = [];
+
+                foreach (json_decode($item['months']) as $month) {
+
+                    $chartKey = '';
+
+                    foreach ($month->table_titles as $titleKey => $tableTitle) {
+
+                        if ($tableTitle == 'Производство (1000 МТ)') {
+                            $chartKey = $titleKey;
+                        }
+                    }
+
+                    foreach ($month->table_data as $titleDataKey => $tableData) {
+
+                        if (empty($tableData) || count($tableData) < 14) {
+                            continue;
+                        }
+
+                        if (!empty($chartKey)) {
+
+                            if ($titleDataKey == 0) {
+                                $toChart[] = [
+                                    'month' => $month->title,
+                                    'value' => $tableData[$chartKey]
+                                ];
+
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return [
+                    'title' => $item['title'],
+                    'value' => $toChart
+                ];
+            });
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
+    }
+
+
+    /**
+     * @throws Exception
+     */
+    public function getParsingBarChartDataTable(array $data, string $type)
+    {
+        if (self::type($type)) {
+            return $this->mapBarChartParsData($this->repository->index($type), $data, 'barchart');
+        }
+
+        throw new Exception('undefined type');
+    }
+
+    /**
+     * @param Collection $collection
+     * @param array $data
+     * @param string $chart
+     * @return array|Collection|\Illuminate\Support\Collection
+     * @throws Exception
+     */
+    public function mapBarChartParsData(Collection $collection, array $data, string $chart)
+    {
+        if (isset($data['title']) && !empty($data['title'])) {
+            if (isset($data['month']) && !empty($data['month'])) {
+                $getTitle = $this->getTitleMonthData($collection, $data['title'], $data['month'], $chart);
+
+                if ($getTitle) {
+                    return $getTitle;
+                } else {
+                    throw new Exception('month не найден', 500);
+                }
+            }
+            return $this->getTitleMonth($collection, $data['title']);
+        } else {
+            return $this->getTitle($collection);
+        }
     }
 }

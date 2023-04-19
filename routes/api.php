@@ -58,5 +58,7 @@ Route::prefix('v1')->group(function (): void {
 
         Route::get('/type-chart/{type}', [ParsingDataTypeController::class, 'typeChart']);
         Route::get('/countries/all', [ParsingDataTypeController::class, 'countries']);
+
+        Route::get('/new-type-chart/{type}', [ParsingDataTypeController::class, 'newTypeChart']);
     });
 });
