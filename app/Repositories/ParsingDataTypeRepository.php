@@ -18,7 +18,9 @@ class ParsingDataTypeRepository
         try {
             return $this->model->query()
                 ->where('type', $type)
-                ->get();
+                ->latest()
+                ->get()
+                ->unique('title');
         } catch (\Exception $exception) {
             $responseData = $exception->getMessage();
             throw new \Exception($responseData);
