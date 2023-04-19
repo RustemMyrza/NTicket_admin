@@ -109,7 +109,10 @@ class ParsingChartDataTypeService
     public function getParsingPieChartDataTable(array $data, string $type)
     {
         if (self::type($type)) {
-            return $this->mapPieChartParsData($this->repository->index($type), $data, 'piechart');
+            if (count($this->repository->index($type))) {
+                return $this->mapPieChartParsData($this->repository->index($type), $data, 'piechart');
+            }
+            return [];
         }
 
         throw new Exception('undefined type');
@@ -208,6 +211,7 @@ class ParsingChartDataTypeService
      * @param Collection $collection
      * @param string $titleData
      * @param string $monthData
+     * @param string $chart
      * @return array
      * @throws Exception
      */
@@ -219,44 +223,32 @@ class ParsingChartDataTypeService
             $collection = $collection->where('title', $titleData);
 
             if (empty($collection->toArray())) {
-                throw new Exception('title не найден', 500);
+                return array_values($data);
             }
 
             $collection->map(function ($item) use (&$data, $monthData, $chart) {
                 foreach (json_decode($item['months']) as $month) {
-
                     if ($monthData == $month->title) {
-
-                        if ($chart == 'piechart'){
-//                            foreach ($month->piechart as $titleKey => $tableTitle) {
-//                                if ($titleKey == 0) {
-//                                    continue;
-//                                }
-//                                $dataKey[$titleKey] = $tableTitle;
-//                            }
-
-                            foreach ($month->piechart as $titleDataKey => $tableData) {
-                                $data[$titleDataKey] = [
-                                    'country' => $tableData->goods,
-                                    'visits' => $tableData->s,
-                                ];
+                        if ($chart == 'piechart') {
+                            if (count($month->piechart)) {
+                                foreach ($month->piechart as $titleDataKey => $tableData) {
+                                    $data[$titleDataKey] = [
+                                        'country' => $tableData->goods,
+                                        'visits' => $tableData->s,
+                                    ];
+                                }
                             }
-                        }else {
-//                            foreach ($month->barchart as $titleKey => $tableTitle) {
-//                                if ($titleKey == 0) {
-//                                    continue;
-//                                }
-//                                $dataKey[$titleKey] = $tableTitle;
-//                            }
-
-                            foreach ($month->barchart as $titleDataKey => $tableData) {
-                                $data[$titleDataKey] = [
-                                    'country' => $tableData->c,
-                                    'litres' => $tableData->v,
-                                ];
+                        } else {
+                            if (count($month->barchart)) {
+                                foreach ($month->barchart as $titleDataKey => $tableData) {
+                                    $data[$titleDataKey] = [
+                                        'country' => $tableData->c,
+                                        'litres' => $tableData->v,
+                                    ];
+                                }
                             }
+
                         }
-
                     }
 
                 }
@@ -332,7 +324,10 @@ class ParsingChartDataTypeService
     public function getParsingBarChartDataTable(array $data, string $type)
     {
         if (self::type($type)) {
-            return $this->mapBarChartParsData($this->repository->index($type), $data, 'barchart');
+            if (count($this->repository->index($type))) {
+                return $this->mapBarChartParsData($this->repository->index($type), $data, 'barchart');
+            }
+            return [];
         }
 
         throw new Exception('undefined type');
@@ -347,19 +342,20 @@ class ParsingChartDataTypeService
      */
     public function mapBarChartParsData(Collection $collection, array $data, string $chart)
     {
-        if (isset($data['title']) && !empty($data['title'])) {
-            if (isset($data['month']) && !empty($data['month'])) {
-                $getTitle = $this->getTitleMonthData($collection, $data['title'], $data['month'], $chart);
+//        if (isset($data['title']) && !empty($data['title'])) {
+//            if (isset($data['month']) && !empty($data['month'])) {
+        $getTitle = $this->getTitleMonthData($collection, $data['title'], $data['month'], $chart);
 
-                if ($getTitle) {
-                    return $getTitle;
-                } else {
-                    throw new Exception('month не найден', 500);
-                }
-            }
-            return $this->getTitleMonth($collection, $data['title']);
-        } else {
-            return $this->getTitle($collection);
-        }
+//                if ($getTitle) {
+        return $getTitle;
+//                }
+//                else {
+//                    throw new Exception('month не найден', 500);
+//                }
+//            }
+//            return $this->getTitleMonth($collection, $data['title']);
+//        } else {
+//            return $this->getTitle($collection);
+//        }
     }
 }

@@ -38,7 +38,7 @@ class ParsingDataTypeController extends Controller
     {
         try {
             return $this->response(200, [
-                'table' => $this->service->getParsingData($request->all(), $type),
+                'table' => $this->service->getNewParsingData($request->all(), $type),
                 'pieChart' => $this->chartService->getParsingPieChartDataTable($request->all(), $type),
                 'barChart' => $this->chartService->getParsingBarChartDataTable($request->all(), $type)
             ], $type);
