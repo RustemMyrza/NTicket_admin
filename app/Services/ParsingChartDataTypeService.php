@@ -121,6 +121,7 @@ class ParsingChartDataTypeService
     /**
      * @param Collection $collection
      * @param array $data
+     * @param string $chart
      * @return array|Collection|\Illuminate\Support\Collection
      * @throws Exception
      */
@@ -130,16 +131,10 @@ class ParsingChartDataTypeService
             if (isset($data['month']) && !empty($data['month'])) {
                 $getTitle = $this->getTitleMonthData($collection, $data['title'], $data['month'], $chart);
 
-                if ($getTitle) {
-                    return $getTitle;
-                } else {
-                    throw new Exception('month не найден', 500);
-                }
+                return $getTitle ?? [];
             }
-            return $this->getTitleMonth($collection, $data['title']);
-        } else {
-            return $this->getTitle($collection);
         }
+        return [];
     }
 
     /**
@@ -342,20 +337,12 @@ class ParsingChartDataTypeService
      */
     public function mapBarChartParsData(Collection $collection, array $data, string $chart)
     {
-//        if (isset($data['title']) && !empty($data['title'])) {
-//            if (isset($data['month']) && !empty($data['month'])) {
-        $getTitle = $this->getTitleMonthData($collection, $data['title'], $data['month'], $chart);
-
-//                if ($getTitle) {
-        return $getTitle;
-//                }
-//                else {
-//                    throw new Exception('month не найден', 500);
-//                }
-//            }
-//            return $this->getTitleMonth($collection, $data['title']);
-//        } else {
-//            return $this->getTitle($collection);
-//        }
+        if (isset($data['title']) && !empty($data['title'])) {
+            if (isset($data['month']) && !empty($data['month'])) {
+                $getTitle = $this->getTitleMonthData($collection, $data['title'], $data['month'], $chart);
+                return $getTitle ?? [];
+            }
+        }
+        return [];
     }
 }
