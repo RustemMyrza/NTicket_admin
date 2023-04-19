@@ -34,6 +34,19 @@ class ParsingDataTypeController extends Controller
         }
     }
 
+
+    public function typeChart(ParsingDataIndexFormRequest $request, $type)
+    {
+        try {
+            return $this->response(200, [
+                'data1' => $this->service->getParsingData($request->all(), $type),
+                'data2' => $this->chartService->getParsingDataTable($type)
+            ], $type);
+        } catch (\Exception $e) {
+            return $this->response(500, [], $e->getMessage());
+        }
+    }
+
     public function table($type): JsonResponse
     {
         try {
