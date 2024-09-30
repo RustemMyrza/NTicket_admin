@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'Napmk',
+    'title' => 'NTicket',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -45,12 +45,12 @@ return [
     |
     */
 
-    'logo' => '<b>НАПМК</b>',
+    'logo' => '<b>NTicket</b>',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Napmk',
+    'logo_img_alt' => 'NTicket',
 
     /*
     |--------------------------------------------------------------------------
@@ -232,87 +232,34 @@ return [
         ],
 
         [
-            'text'    => 'Страницы',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'Блоки о нас',
-                    'url'  => '/admin/about-block',
-                    'icon'    => 'fas fa-fw fa-info',
-                ],
-                [
-                    'text' => 'Контакты',
-                    'icon' => 'fas fa-fw fa-phone-alt',
-                    'url'  => '/admin/contacts',
-                ],
-                [
-                    'text' => 'Новости',
-                    'icon' => 'fas fa-fw fa-info',
-                    'url'  => '/admin/news',
-                ],
-                [
-                    'text' => 'Аналитика',
-                    'icon' => 'fas fa-fw fa-info',
-                    'url'  => '/admin/analytics',
-                ],
-                [
-                    'text' => 'Экспертное мнение',
-                    'icon' => 'fas fa-fw fa-info',
-                    'url'  => '/admin/opinion',
-                ],
-                [
-                    'text' => 'Технологии',
-                    'icon' => 'fas fa-fw fa-info',
-                    'url'  => '/admin/technology',
-                ],
-            ],
+            'text' => 'Клиенты',
+            'url'  => '/admin/client',
+            'icon' => 'fas fa-fw fa-users',
         ],
+
         [
-            'text'    => 'Блоки Главной стр',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'Баннер',
-                    'url'  => '/admin/banner',
-                    'icon'    => 'fas fa-fw fa-th',
-                ],
-                [
-                    'text' => 'Наша цель',
-                    'url'  => '/admin/purpose',
-                    'icon'    => 'fas fa-fw fa-th',
-                ],
-                // [
-                //     'text' => 'Свяжитесь с нами',
-                //     'url'  => '/admin/block?type=callback',
-                //     'icon'    => 'fas fa-fw fa-th',
-                // ],
-                // [
-                //     'text' => 'Блок мы предлагаем',
-                //     'url'  => '/admin/block?type=we_offer',
-                //     'icon'    => 'fas fa-fw fa-th',
-                // ],
-                // [
-                //     'text' => 'Блок аналитика',
-                //     'url'  => '/admin/block?type=analytic',
-                //     'icon'    => 'fas fa-fw fa-th',
-                // ],
-                // [
-                //     'text' => 'Блок Услуги',
-                //     'url'  => '/admin/block?type=service',
-                //     'icon'    => 'fas fa-fw fa-th',
-                // ],
-                // [
-                //     'text' => 'Блок Вопросы',
-                //     'url'  => '/admin/block?type=questions',
-                //     'icon'    => 'fas fa-fw fa-th',
-                // ],
-            ],
+            'text' => 'Организаций',
+            'url'  => '/admin/organization',
+            'icon'    => 'fas fa-fw fa-star',
         ],
+
         [
-                'text' => 'Блок Партнеры',
-                'icon' => 'fas fa-fw fa-share-alt',
-                'url'  => '/admin/partner-blocks',
+            'text' => 'Вопрос-ответ',
+            'url'  => '/admin/questionChat',
+            'icon'    => 'fas fa-fw fa-question',
         ],
+        // [
+        //     'text'    => 'Страницы',
+        //     'icon'    => 'fas fa-fw fa-share',
+        //     'submenu' => [
+        //         [
+        //             'text' => 'Блоки о нас',
+        //             'url'  => '/admin/about-block',
+        //             'icon'    => 'fas fa-fw fa-info',
+        //         ]
+                
+        //     ],
+        // ],
         // [
         //     'text'    => 'Блоки стр О нас',
         //     'icon'    => 'fas fa-fw fa-share',
@@ -382,6 +329,7 @@ return [
             'url'  => 'admin/edit',
             'icon' => 'fas fa-fw fa-lock',
         ],
+    ],
         // ['header' => 'labels'],
         // [
         //     'text'       => 'important',
@@ -398,7 +346,7 @@ return [
         //     'icon_color' => 'cyan',
         //     'url'        => '#',
         // ],
-    ],
+
 
     /*
     |--------------------------------------------------------------------------
